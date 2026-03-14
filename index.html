@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FRLG Master v36</title>
+    <title>FRLG Master v37</title>
     <style>
         :root { --primary: #1877f2; --bg: #f0f2f5; --card: #ffffff; --text: #1c1e21; --shiny: #ffcc00; --accent: #e0245e; --btn-gray: #65676b; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); padding: 5px; color: var(--text); margin: 0; }
@@ -21,6 +21,8 @@
         button.main-btn { padding: 15px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; color: white; margin-top: 5px; transition: 0.3s; }
         .btn-blue { background: var(--primary); }
         .btn-blue:disabled { background: #a0c4ff; cursor: not-allowed; }
+        .btn-matrix { background: #e4e6eb; color: #050505; border: 1px solid #ccd0d5; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 10px; font-weight: bold; }
+        .btn-matrix:hover { background: #d8dadf; }
         .btn-stop { background: var(--btn-gray); margin-top: 8px; display: none; }
         .btn-action { padding: 8px; font-size: 11px; border-radius: 5px; border: 1px solid #ddd; cursor: pointer; background: white; font-weight: bold; color: var(--btn-gray); flex: 1; }
         #progress-container { width: 100%; background: #eee; height: 10px; border-radius: 5px; margin: 10px 0; display: none; overflow: hidden; }
@@ -30,6 +32,7 @@
         .log-table th { background: #f0f2f5; padding: 8px; border: 1px solid #ddd; text-align: left; }
         .log-table td { padding: 8px; border: 1px solid #ddd; font-family: monospace; }
         .shiny-row { background-color: #fff9e6 !important; font-weight: bold; }
+        .center-row { background-color: #e7f3ff !important; font-weight: bold; border-left: 3px solid var(--primary); }
         .trigger-note { font-size: 11px; color: #d9534f; background: #fdf7f7; padding: 8px; border-radius: 5px; margin-bottom: 10px; border-left: 4px solid #d9534f; }
         .collapsible-content { display: block; overflow: hidden; transition: max-height 0.2s ease-out; }
     </style>
@@ -73,12 +76,16 @@
             </div>
 
             <div class="section-box">
-                <div class="section-title">3. Seed Searcher</div>
+                <div class="section-title">3. Seed Searcher (Targeted Window)</div>
                 <div class="grid">
                     <input type="number" id="iv0" placeholder="HP IV"><input type="number" id="iv1" placeholder="Atk IV"><input type="number" id="iv2" placeholder="Def IV">
                     <input type="number" id="iv3" placeholder="SpA IV"><input type="number" id="iv4" placeholder="SpD IV"><input type="number" id="iv5" placeholder="Spe IV">
                 </div>
-                <button class="main-btn btn-blue" id="runBtn" onclick="runTurbo()">Search Seed</button>
+                <div class="grid">
+                    <div class="input-group">Min Advance <input type="number" id="minFrames" value="1000"></div>
+                    <div class="input-group">Max Advance <input type="number" id="maxFrames" value="5000"></div>
+                </div>
+                <button class="main-btn btn-blue" id="runBtn" onclick="runTurbo()">Search All Seeds in Window</button>
                 <button class="main-btn btn-stop" id="stopBtn" onclick="isSearching=false">STOP SEARCH</button>
                 <div id="progress-container"><div id="progress-bar"></div></div>
                 <div id="console">Ready...</div>
@@ -88,7 +95,12 @@
                 </div>
             </div>
 
-            <div class="log-wrap"><table class="log-table" id="mainLogTable"><thead><tr><th>Seed</th><th>Adv</th><th>IVs</th><th>Gender</th><th>Shiny</th></tr></thead><tbody id="logBody"></tbody></table></div>
+            <div class="log-wrap"><table class="log-table" id="mainLogTable"><thead><tr><th>Seed</th><th>Adv</th><th>IVs</th><th>Gender</th><th>Shiny</th><th>Inspect</th></tr></thead><tbody id="logBody"></tbody></table></div>
+            
+            <div id="matrixSection" style="display:none; margin-top:20px; padding:15px; background: #fff; border: 1px solid #ccd0d5; border-radius:8px;">
+                <div class="section-title" style="color:#050505;">Adjacency Matrix (Seed: <span id="matSeed" style="color:var(--primary);"></span>)</div>
+                <table class="log-table"><thead><tr><th>Adv</th><th>Nature</th><th>IVs</th><th>Gender</th><th>Shiny</th></tr></thead><tbody id="matrixBody"></tbody></table>
+            </div>
         </div>
 
         <div id="shiny" class="tab-content">
@@ -135,6 +147,7 @@
         };
 
         let isSearching = false;
+        let matchesFound = 0;
 
         function openTab(id) {
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -190,16 +203,19 @@
         }
 
         function runTurbo() {
-            isSearching = true;
+            isSearching = true; matchesFound = 0;
             const tid = parseInt(document.getElementById('tid').value);
             const sid = parseInt(document.getElementById('sid').value);
             const tNat = natures.indexOf(document.getElementById('nat').value);
             const tIVs = [0,1,2,3,4,5].map(i => parseInt(document.getElementById('iv'+i).value || 0));
+            const minFrame = parseInt(document.getElementById('minFrames').value);
+            const maxFrame = parseInt(document.getElementById('maxFrames').value);
+            
             const btn = document.getElementById('runBtn');
             const con = document.getElementById('console');
             const prog = document.getElementById('progress-bar');
             
-            btn.disabled = true; btn.innerText = "Scanning Seeds...";
+            btn.disabled = true; btn.innerText = "Scanning Window...";
             document.getElementById('stopBtn').style.display = 'block';
             document.getElementById('progress-container').style.display = 'block';
 
@@ -208,24 +224,33 @@
                 const start = Date.now();
                 while (Date.now() - start < 150) {
                     if (!isSearching) { finishSearch(); return; }
-                    if (seed > 0xFFFF) { con.innerText = "All Seeds Scanned."; finishSearch(); return; }
+                    if (seed > 0xFFFF) { con.innerText = `Scan Complete. Found ${matchesFound} matches in window.`; finishSearch(); return; }
+                    
                     let r = seed;
-                    for (let f = 0; f < 30000; f++) {
+                    // Fast-forward to minFrame
+                    for(let i=0; i < minFrame; i++) { r = next(r); }
+
+                    for (let f = minFrame; f <= maxFrame; f++) {
                         let v1 = next(r), v2 = next(v1), v3 = next(v2), v4 = next(v3);
                         let pid = ((v2 >>> 16) << 16) | (v1 >>> 16);
+                        
+                        // Force positive evaluation with >>> 0 to avoid undefined nature glitch
                         if ((pid >>> 0) % 25 === tNat) {
                             let i1 = v3 >>> 16, i2 = v4 >>> 16;
                             let curIVs = [i1 & 31, (i1 >> 5) & 31, (i1 >> 10) & 31, (i2 >> 5) & 31, (i2 >> 10) & 31, i2 & 31];
+                            
                             if (curIVs.every((v, i) => v === tIVs[i])) {
+                                matchesFound++;
                                 let sStr = "0x" + seed.toString(16).toUpperCase();
                                 let isShiny = (tid ^ sid ^ (pid & 0xFFFF) ^ (pid >>> 16)) < 8;
-                                con.innerHTML = `<strong>Found: ${sStr} at ${f}</strong>`;
+                                
+                                con.innerHTML = `<strong>Found Match: ${sStr} at Frame ${f}</strong>`;
                                 document.getElementById('activeSeed').value = sStr;
                                 document.getElementById('hAdv').value = f;
+                                
                                 const row = document.getElementById('logBody').insertRow(0);
                                 if(isShiny) row.className = "shiny-row";
-                                row.innerHTML = `<td>${sStr}</td><td>${f}</td><td>${curIVs.join('/')}</td><td>${(pid & 0xFF) < 31 ? '♀' : '♂'}</td><td>${isShiny ? 'YES✨' : 'No'}</td>`;
-                                finishSearch(); return;
+                                row.innerHTML = `<td>${sStr}</td><td>${f}</td><td>${curIVs.join('/')}</td><td>${(pid & 0xFF) < 31 ? '♀' : '♂'}</td><td>${isShiny ? 'YES✨' : 'No'}</td><td><button class="btn-matrix" onclick="showMatrix('${sStr}', ${f})">Matrix</button></td>`;
                             }
                         }
                         r = v1;
@@ -236,6 +261,40 @@
                 setTimeout(slice, 1);
             }
             slice();
+        }
+
+        function showMatrix(seedStr, centerFrame) {
+            document.getElementById('matrixSection').style.display = 'block';
+            document.getElementById('matSeed').innerText = seedStr;
+            const body = document.getElementById('matrixBody');
+            body.innerHTML = "";
+
+            const tid = parseInt(document.getElementById('tid').value);
+            const sid = parseInt(document.getElementById('sid').value);
+            
+            let startFrame = Math.max(0, centerFrame - 15);
+            let endFrame = centerFrame + 15;
+            
+            let r = parseInt(seedStr, 16);
+            for(let i = 0; i < startFrame; i++) { r = next(r); }
+
+            for(let f = startFrame; f <= endFrame; f++) {
+                let tempR = r;
+                let v1 = next(tempR), v2 = next(v1), v3 = next(v2), v4 = next(v3);
+                let pid = ((v2 >>> 16) << 16) | (v1 >>> 16);
+                let isShiny = (tid ^ sid ^ (pid & 0xFFFF) ^ (pid >>> 16)) < 8;
+                let i1 = v3 >>> 16, i2 = v4 >>> 16;
+                let ivs = [i1 & 31, (i1 >> 5) & 31, (i1 >> 10) & 31, (i2 >> 5) & 31, (i2 >> 10) & 31, i2 & 31];
+                
+                const row = body.insertRow();
+                if (f === centerFrame) row.className = "center-row";
+                else if (isShiny) row.className = "shiny-row";
+                
+                // Fixed undefined nature by using (pid >>> 0)
+                row.innerHTML = `<td>${f}</td><td>${natures[(pid >>> 0) % 25]}</td><td>${ivs.join('/')}</td><td>${(pid & 0xFF) < 31 ? '♀' : '♂'}</td><td>${isShiny ? 'YES✨' : 'No'}</td>`;
+                r = next(r);
+            }
+            document.getElementById('matrixSection').scrollIntoView({behavior: 'smooth', block: 'end'});
         }
 
         function huntShinies() {
@@ -254,18 +313,19 @@
                     let i1 = v3 >>> 16, i2 = v4 >>> 16;
                     let ivs = [i1 & 31, (i1 >> 5) & 31, (i1 >> 10) & 31, (i2 >> 5) & 31, (i2 >> 10) & 31, i2 & 31];
                     const row = body.insertRow();
-                    row.innerHTML = `<td>${f}</td><td>${natures[pid % 25]}</td><td>${ivs.join('/')}</td><td>${(pid & 0xFF) < 31 ? '♀' : '♂'}</td>`;
+                    // Fixed undefined nature here as well
+                    row.innerHTML = `<td>${f}</td><td>${natures[(pid >>> 0) % 25]}</td><td>${ivs.join('/')}</td><td>${(pid & 0xFF) < 31 ? '♀' : '♂'}</td>`;
                 }
                 r = next(r); 
             }
         }
 
-        function finishSearch() { isSearching = false; document.getElementById('runBtn').disabled = false; document.getElementById('runBtn').innerText = "Search Seed"; document.getElementById('stopBtn').style.display = 'none'; document.getElementById('progress-container').style.display = 'none'; }
-        function clearSearchLog() { document.getElementById('logBody').innerHTML = ""; }
+        function finishSearch() { isSearching = false; document.getElementById('runBtn').disabled = false; document.getElementById('runBtn').innerText = "Search All Seeds in Window"; document.getElementById('stopBtn').style.display = 'none'; document.getElementById('progress-container').style.display = 'none'; }
+        function clearSearchLog() { document.getElementById('logBody').innerHTML = ""; document.getElementById('matrixSection').style.display = "none"; }
         function downloadCSV() {
             const rows = document.querySelectorAll("#mainLogTable tr");
             let csv = "data:text/csv;charset=utf-8,";
-            rows.forEach(r => { let d = []; r.querySelectorAll("th, td").forEach(cell => d.push(cell.innerText)); csv += d.join(",") + "\r\n"; });
+            rows.forEach(r => { let d = []; r.querySelectorAll("th, td").forEach(cell => { if(cell.innerText !== 'Matrix') d.push(cell.innerText); }); csv += d.join(",") + "\r\n"; });
             const link = document.createElement("a"); link.href = encodeURI(csv); link.download = "RNG_Log.csv"; link.click();
         }
 
@@ -275,7 +335,6 @@
             document.getElementById('calibResult').innerHTML = `Offset: ${t - h}<br>Adjusted Target: ${t + (t - h)}`;
         }
 
-        // Init Data
         [document.getElementById('nat'), document.getElementById('calcNat')].forEach(sel => {
             natures.forEach(n => { sel.innerHTML += `<option value="${n}">${n}</option>`; });
             sel.value = "Bold";
