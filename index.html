@@ -3,611 +3,606 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FRLG Master v41 - High Fidelity Edition</title>
+    <title>FRLG Master v45 - The Unabridged Monolith</title>
     <style>
+        /* STYLING SYSTEM - FULL SPEC 
+           Designed for high-density data viewing during marathon RNG runs.
+        */
         :root { 
             --primary: #1877f2; 
+            --primary-hover: #166fe5;
             --bg: #f0f2f5; 
             --card: #ffffff; 
             --text: #1c1e21; 
+            --text-secondary: #65676b;
             --shiny: #ffcc00; 
             --accent: #e0245e; 
             --success: #28a745; 
             --warning: #ff9800; 
-            --dark: #1c1e21;
+            --dark-bg: #1c1e21;
+            --border: #dddfe2;
+            --method-1: #607d8b;
+            --method-2: #00bcd4;
+            --method-4: #673ab7;
         }
 
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: var(--bg); 
-            padding: 15px; 
+            background-color: var(--bg); 
             color: var(--text); 
             margin: 0; 
-            line-height: 1.5;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
         }
 
         .container { 
             background: var(--card); 
-            padding: 25px; 
-            border-radius: 16px; 
-            max-width: 1050px; 
-            margin: auto; 
-            box-shadow: 0 8px 30px rgba(0,0,0,0.12); 
-            min-height: 90vh; 
+            width: 100%;
+            max-width: 1100px; 
+            border-radius: 12px; 
+            box-shadow: 0 12px 28px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 rgba(0, 0, 0, 0.1); 
+            overflow: hidden;
+            padding-bottom: 50px;
         }
 
-        /* Navigation Tabs */
+        /* Header Navigation */
+        .app-header {
+            background: var(--primary);
+            color: white;
+            padding: 25px 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .app-header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
         .tabs { 
             display: flex; 
-            background: #e4e6eb; 
-            border-radius: 12px; 
-            margin-bottom: 25px; 
-            padding: 6px; 
-            gap: 8px; 
-            border: 1px solid #ddd;
+            background: #f0f2f5; 
+            padding: 12px 25px; 
+            gap: 12px; 
+            border-bottom: 1px solid var(--border);
         }
 
         .tab-btn { 
-            flex: 1; 
-            padding: 14px; 
+            padding: 14px 28px; 
             border: none; 
+            background: transparent;
             cursor: pointer; 
             font-weight: 700; 
-            background: transparent; 
             border-radius: 10px; 
-            transition: all 0.3s ease; 
-            font-size: 13px; 
-            color: #65676b; 
-            text-transform: uppercase;
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+            font-size: 15px;
+        }
+
+        .tab-btn:hover {
+            background: rgba(0,0,0,0.06);
         }
 
         .tab-btn.active { 
-            background: var(--card); 
+            background: white; 
             color: var(--primary); 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.08); 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
         }
 
-        .tab-content { 
-            display: none; 
+        .tab-content { display: none; padding: 30px; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Form Controls */
+        .section { margin-bottom: 35px; }
+
+        .section-header {
+            font-size: 13px;
+            text-transform: uppercase;
+            font-weight: 900;
+            color: var(--text-secondary);
+            border-bottom: 2px solid #f0f2f5;
+            padding-bottom: 12px;
+            margin-bottom: 25px;
+            letter-spacing: 1.2px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .tab-content.active { 
-            display: block; 
-            animation: fadeIn 0.4s ease-out; 
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; }
+        .grid-6 { display: grid; grid-template-columns: repeat(6, 1fr); gap: 15px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+
+        .input-wrapper { display: flex; flex-direction: column; gap: 10px; }
+        .input-wrapper label { font-size: 12px; font-weight: 700; color: var(--text-secondary); }
+
+        input, select {
+            padding: 14px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 16px;
+            background: #ffffff;
+            transition: all 0.2s;
+            box-sizing: border-box;
         }
 
-        @keyframes fadeIn { 
-            from { opacity: 0; transform: translateY(5px); } 
-            to { opacity: 1; transform: translateY(0); } 
-        }
-
-        /* Content Blocks */
-        .section-box { 
-            background: #f7f8fa; 
-            border: 1px solid #dee2e6; 
-            padding: 20px; 
-            border-radius: 14px; 
-            margin-bottom: 20px; 
-        }
-
-        .section-title { 
-            font-size: 13px; 
-            font-weight: 900; 
-            color: #4b4f56; 
-            text-transform: uppercase; 
-            margin-bottom: 15px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            letter-spacing: 1px;
-            border-bottom: 2px solid #edf0f5;
-            padding-bottom: 8px;
-        }
-
-        .grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); 
-            gap: 15px; 
-            margin-bottom: 15px; 
-        }
-
-        .input-group { 
-            display: flex; 
-            flex-direction: column; 
-            font-weight: 700; 
-            font-size: 11px; 
-            color: #606770; 
-        }
-
-        input, select { 
-            padding: 14px; 
-            border: 2px solid #ccd0d5; 
-            border-radius: 10px; 
-            margin-top: 6px; 
-            font-size: 16px; 
-            width: 100%; 
-            box-sizing: border-box; 
-            background: white;
-            transition: border-color 0.2s;
-        }
-
-        input:focus { 
-            border-color: var(--primary); 
-            outline: none; 
-            box-shadow: 0 0 0 4px rgba(24, 119, 242, 0.1); 
+        input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(24, 119, 242, 0.1);
         }
 
         /* Buttons */
-        button.main-btn { 
-            padding: 18px; 
-            border: none; 
-            border-radius: 12px; 
-            cursor: pointer; 
-            font-weight: 800; 
-            width: 100%; 
-            color: white; 
-            margin-top: 10px; 
-            transition: all 0.2s; 
-            text-transform: uppercase; 
+        .btn {
+            padding: 16px 30px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 800;
+            cursor: pointer;
+            text-transform: uppercase;
             font-size: 14px;
-            letter-spacing: 1px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
-        .btn-blue { background: var(--primary); box-shadow: 0 5px 0 #1156b3; }
-        .btn-blue:hover { filter: brightness(1.05); transform: translateY(-2px); }
-        .btn-blue:active { transform: translateY(2px); box-shadow: 0 1px 0 #1156b3; }
-        
-        .btn-stop { background: var(--accent); display: none; box-shadow: 0 5px 0 #a01a43; }
+        .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 0 #1156b3; }
+        .btn-primary:active { transform: translateY(3px); box-shadow: 0 1px 0 #1156b3; }
+        .btn-danger { background: var(--accent); color: white; display: none; box-shadow: 0 4px 0 #a01a43; }
+        .btn-success { background: var(--success); color: white; box-shadow: 0 4px 0 #1e7e34; }
 
-        /* Output & Tables */
-        #console { 
-            padding: 20px; 
-            border-radius: 12px; 
-            font-family: 'Fira Code', 'Consolas', monospace; 
-            font-size: 14px; 
-            background: var(--dark); 
-            color: #00ff41; 
-            border-left: 8px solid var(--success); 
-            margin: 20px 0; 
-            min-height: 30px; 
-            box-shadow: inset 0 2px 15px rgba(0,0,0,0.4);
+        /* Console & Tables */
+        #status-bar {
+            background: var(--dark-bg);
+            color: #00ff41;
+            padding: 18px 25px;
+            border-radius: 10px;
+            font-family: 'Cascadia Code', 'Consolas', monospace;
+            font-size: 14px;
+            margin: 25px 0;
+            border-left: 6px solid var(--success);
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
         }
 
-        .log-table { 
-            width: 100%; 
-            border-collapse: separate; 
-            border-spacing: 0;
-            font-size: 13px; 
-            background: white; 
-            border-radius: 12px; 
-            overflow: hidden; 
-            border: 1px solid #dddfe2; 
-            margin-top: 15px; 
+        .table-container {
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
 
-        .log-table th { 
-            background: #f5f6f7; 
-            padding: 15px; 
-            border-bottom: 2px solid #dddfe2; 
-            text-align: left; 
-            color: #4b4f56; 
-            font-weight: 800; 
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th {
+            background: #f8f9fa;
+            text-align: left;
+            padding: 18px;
+            font-weight: 800;
+            color: var(--text-secondary);
+            border-bottom: 2px solid var(--border);
         }
 
-        .log-table td { 
-            padding: 14px; 
-            border-bottom: 1px solid #eee; 
-            font-family: 'Roboto Mono', monospace; 
-        }
+        td { padding: 16px; border-bottom: 1px solid #f0f2f5; font-family: 'Roboto Mono', monospace; }
 
-        .sticky-seed { 
-            background-color: #e6ffed !important; 
-            font-weight: bold; 
-            color: #155724; 
-            border-left: 6px solid var(--success); 
-        }
+        .shiny-row { background: #fffde7 !important; font-weight: bold; color: #856404; border-left: 5px solid var(--shiny); }
+        .repeat-seed { background: #e8f5e9 !important; border-left: 5px solid var(--success); font-weight: bold; }
 
-        .shiny-row { 
-            background: linear-gradient(90deg, #fff9db, #ffffff); 
-            font-weight: bold; 
+        .badge {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            color: white;
+            font-weight: 900;
         }
+        .m1 { background: var(--method-1); }
+        .m2 { background: var(--method-2); }
+        .m4 { background: var(--method-4); }
 
-        /* Method Badges */
-        .badge { 
-            padding: 4px 8px; 
-            border-radius: 6px; 
-            font-size: 10px; 
-            color: white; 
-            font-weight: 900; 
-            display: inline-block;
-        }
-        .m1 { background: #6c757d; } 
-        .m2 { background: #17a2b8; } 
-        .m4 { background: #6f42c1; }
-
-        .btn-sm { 
-            border: none; 
-            padding: 8px 14px; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            font-size: 11px; 
-            font-weight: 800; 
-        }
-        .btn-green { background: var(--success); color: white; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab(event, 'search')">Marathon Center</button>
-            <button class="tab-btn" onclick="switchTab(event, 'shiny')">Shiny Explorer</button>
-            <button class="tab-btn" onclick="switchTab(event, 'calib')">Sync Logic</button>
+        <header class="app-header">
+            <h1>FRLG Master v45 — The Monolith</h1>
+            <div id="runtime-clock" style="font-family: monospace; font-size: 14px; opacity: 0.8;">SESSION READY</div>
+        </header>
+
+        <nav class="tabs">
+            <button class="tab-btn active" onclick="openTab(event, 'marathon')">Deep Marathon Scan</button>
+            <button class="tab-btn" onclick="openTab(event, 'explorer')">Shiny Seed Mapper</button>
+            <button class="tab-btn" onclick="openTab(event, 'sync')">Calibration Engine</button>
+        </nav>
+
+        <div id="marathon" class="tab-content active">
+            <div class="section">
+                <div class="section-header">1. Trainer & Target Profile</div>
+                <div class="grid-3">
+                    <div class="input-wrapper">
+                        <label>Trainer ID (TID)</label>
+                        <input type="number" id="tid" value="14448">
+                    </div>
+                    <div class="input-wrapper">
+                        <label>Secret ID (SID)</label>
+                        <input type="number" id="sid" value="14777">
+                    </div>
+                    <div class="input-wrapper">
+                        <label>Goal Nature</label>
+                        <select id="targetNature"></select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <span>2. Level 100 IV Decoder</span>
+                    <button class="btn-success" style="padding: 6px 12px; font-size: 11px; box-shadow: none;" onclick="calculateIVsFromStats()">Sync Stats to IVs</button>
+                </div>
+                <div class="grid-2" style="margin-bottom: 20px;">
+                    <div class="input-wrapper">
+                        <label>Species Reference</label>
+                        <select id="speciesSelect"></select>
+                    </div>
+                    <div class="input-wrapper">
+                        <label>Actual Nature (for stat calc)</label>
+                        <select id="actualNature"></select>
+                    </div>
+                </div>
+                <div class="grid-6">
+                    <div class="input-wrapper"><label>HP Stat</label><input type="number" id="stat-0"></div>
+                    <div class="input-wrapper"><label>Atk Stat</label><input type="number" id="stat-1"></div>
+                    <div class="input-wrapper"><label>Def Stat</label><input type="number" id="stat-2"></div>
+                    <div class="input-wrapper"><label>SpA Stat</label><input type="number" id="stat-3"></div>
+                    <div class="input-wrapper"><label>SpD Stat</label><input type="number" id="stat-4"></div>
+                    <div class="input-wrapper"><label>Spe Stat</label><input type="number" id="stat-5"></div>
+                </div>
+            </div>
+
+            <div class="section" style="border-top: 4px solid var(--primary); padding-top: 30px;">
+                <div class="section-header">3. RNG Marathon Search Parameters</div>
+                <div class="grid-6" style="margin-bottom: 25px;">
+                    <div class="input-wrapper"><label>HP IV</label><input type="number" id="iv-0"></div>
+                    <div class="input-wrapper"><label>Atk IV</label><input type="number" id="iv-1"></div>
+                    <div class="input-wrapper"><label>Def IV</label><input type="number" id="iv-2"></div>
+                    <div class="input-wrapper"><label>SpA IV</label><input type="number" id="iv-3"></div>
+                    <div class="input-wrapper"><label>SpD IV</label><input type="number" id="iv-4"></div>
+                    <div class="input-wrapper"><label>Spe IV</label><input type="number" id="iv-5"></div>
+                </div>
+                <div class="grid-2">
+                    <div class="input-wrapper"><label>Starting Advance</label><input type="number" id="minAdv" value="1000"></div>
+                    <div class="input-wrapper"><label>End Advance (Max)</label><input type="number" id="maxAdv" value="8000"></div>
+                </div>
+                <button class="btn btn-primary" id="startBtn" onclick="runMarathon()" style="margin-top: 30px; width: 100%;">Execute Global Search</button>
+                <button class="btn btn-danger" id="stopBtn" onclick="stopSearch()" style="margin-top: 15px; width: 100%;">Kill Process</button>
+            </div>
+
+            <div id="status-bar">Awaiting Search Initialization...</div>
+
+            <div class="section">
+                <div class="section-header">Global Seed Consistency Matrix</div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr><th>Initial Seed</th><th>Hit Count</th><th>Avg Advance</th><th>Action</th></tr>
+                        </thead>
+                        <tbody id="consistencyBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">Discovery Log</div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr><th>Initial Seed</th><th>Advance</th><th>Method</th><th>IV Spread</th><th>Shiny</th><th>Link</th></tr>
+                        </thead>
+                        <tbody id="marathonResults"></tbody>
+                    </table>
+                </div>
+            </div>
         </div>
 
-        <div id="search" class="tab-content active">
-            <div class="section-box">
-                <div class="section-title">1. Trainer & Target Details</div>
-                <div class="grid">
-                    <div class="input-group">TID <input type="number" id="tid" value="14448"></div>
-                    <div class="input-group">SID <input type="number" id="sid" value="14777"></div>
-                    <div class="input-group">Species <select id="speciesSelect" onchange="updateBaseStats()"></select></div>
-                    <div class="input-group">Goal Nature <select id="goalNature"></select></div>
+        <div id="explorer" class="tab-content">
+            <div class="section">
+                <div class="section-header">High-Depth Seed Explorer</div>
+                <div class="grid-2">
+                    <div class="input-wrapper"><label>Target Seed (Hex)</label><input type="text" id="targetHex" placeholder="0x0BF6"></div>
+                    <div class="input-wrapper"><label>Scan Depth (Total Frames)</label><input type="number" id="depth" value="35000"></div>
                 </div>
+                <button class="btn btn-primary" onclick="exploreSeed()" style="margin-top:25px; width: 100%;">Generate Result Map</button>
             </div>
-
-            <div class="section-box">
-                <div class="section-title">2. Statistics Analyzer (IV Extractor)</div>
-                <div class="grid" style="grid-template-columns: 1fr 1fr 1fr;">
-                    <div class="input-group">Lvl <input type="number" id="calcLvl" value="100"></div>
-                    <div class="input-group">Nature <select id="calcNature"></select></div>
-                    <div class="input-group">Action <button class="btn-sm btn-green" style="margin-top:5px" onclick="performIVCalculation()">Analyze Stats</button></div>
-                </div>
-                <div class="grid">
-                    <div class="input-group">HP <input type="number" id="inStat0"></div>
-                    <div class="input-group">Atk <input type="number" id="inStat1"></div>
-                    <div class="input-group">Def <input type="number" id="inStat2"></div>
-                    <div class="input-group">SpA <input type="number" id="inStat3"></div>
-                    <div class="input-group">SpD <input type="number" id="inStat4"></div>
-                    <div class="input-group">Spe <input type="number" id="inStat5"></div>
-                </div>
-            </div>
-
-            <div class="section-box" style="border-top: 6px solid var(--primary);">
-                <div class="section-title">3. Deep Scan (Triple Method M1/M2/M4)</div>
-                <div class="grid">
-                    <div class="input-group">HP <input type="number" id="ivField0"></div>
-                    <div class="input-group">Atk <input type="number" id="ivField1"></div>
-                    <div class="input-group">Def <input type="number" id="ivField2"></div>
-                    <div class="input-group">SpA <input type="number" id="ivField3"></div>
-                    <div class="input-group">SpD <input type="number" id="ivField4"></div>
-                    <div class="input-group">Spe <input type="number" id="ivField5"></div>
-                </div>
-                <div class="grid">
-                    <div class="input-group">Min Advance <input type="number" id="minAdv" value="1000"></div>
-                    <div class="input-group">Max Advance <input type="number" id="maxAdv" value="6500"></div>
-                </div>
-                <button class="main-btn btn-blue" id="btnRun" onclick="initiateMarathonSearch()">Launch Marathon Scan</button>
-                <button class="main-btn btn-stop" id="btnAbort" onclick="globalSearchState=false">Kill Process</button>
-                <div id="console">System Ready. Verify IVs before scanning.</div>
-            </div>
-
-            <div class="section-box" style="background: white; border: 3px solid var(--primary);">
-                <div class="section-title" style="color:var(--primary)">🏆 Consistency Matrix (Repeat Hits)</div>
-                <table class="log-table">
-                    <thead><tr><th>Seed</th><th>Hits</th><th>Average Frame</th><th>Sync</th></tr></thead>
-                    <tbody id="trackerBody"></tbody>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>Advance</th><th>Nature</th><th>IV Spread</th><th>Shiny Status</th></tr></thead>
+                    <tbody id="explorerBody"></tbody>
                 </table>
             </div>
-
-            <div class="section-title">Marathon Log</div>
-            <table class="log-table">
-                <thead><tr><th>Seed</th><th>Advance</th><th>Method</th><th>IVs</th><th>Shiny</th><th>Action</th></tr></thead>
-                <tbody id="resultsLogBody"></tbody>
-            </table>
         </div>
 
-        <div id="shiny" class="tab-content">
-            <div class="section-box">
-                <div class="section-title">Seed Mapping</div>
-                <div class="grid">
-                    <div class="input-group">Target Seed <input type="text" id="mapTargetSeed" value="0x0000"></div>
-                    <div class="input-group">Max Frames <input type="number" id="mapDepth" value="25000"></div>
+        <div id="sync" class="tab-content">
+            <div class="section">
+                <div class="section-header">Hardware Latency Measurement</div>
+                <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 25px;">Input your target advance and the actual frame you hit to calculate your unique hardware delay (latency).</p>
+                <div class="grid-2">
+                    <div class="input-wrapper"><label>Intended Target Frame</label><input type="number" id="targetF" value="2000"></div>
+                    <div class="input-wrapper"><label>Observed Hit Frame</label><input type="number" id="actualF"></div>
                 </div>
-                <button class="main-btn btn-blue" onclick="generateShinyMap()">Search for Sparkles</button>
-            </div>
-            <table class="log-table">
-                <thead><tr><th>Advance</th><th>Nature</th><th>IV Spread</th><th>Shiny</th></tr></thead>
-                <tbody id="mapResultsBody"></tbody>
-            </table>
-        </div>
-
-        <div id="calib" class="tab-content">
-            <div class="section-box">
-                <div class="section-title">Hardware Latency</div>
-                <div class="grid">
-                    <div class="input-group">Target <input type="number" id="calExp" value="2000"></div>
-                    <div class="input-group">Actual <input type="number" id="calHit"></div>
-                </div>
-                <div id="latencyResult" style="padding:40px; text-align:center; font-size:28px; font-weight:900; color:var(--primary);">0ms</div>
-                <button class="main-btn btn-blue" onclick="processCalibration()">Update Offset</button>
+                <div id="syncOutput" style="font-size: 52px; text-align: center; padding: 60px; font-weight: 900; color: var(--primary);">0ms</div>
+                <button class="btn btn-primary" onclick="calculateSync()" style="width:100%">Calculate Latency Offset</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Data Structures
-        const natures = ["Hardy", "Lonely", "Brave", "Adamant", "Naughty", "Bold", "Docile", "Relaxed", "Impish", "Lax", "Timid", "Hasty", "Serious", "Jolly", "Naive", "Modest", "Mild", "Quiet", "Bashful", "Rash", "Calm", "Gentle", "Sassy", "Careful", "Quirky"];
-        const speciesDb = { 
-        // --- Legendaries & Mythicals ---
-        "Mewtwo":   [106, 110, 90, 154, 90, 130],
-        "Zapdos":   [90, 90, 85, 125, 90, 100], 
-        "Articuno": [90, 85, 100, 95, 125, 85],
-        "Moltres":  [90, 100, 90, 125, 85, 90], 
-        "Entei":    [115, 115, 85, 90, 75, 100],
-        "Raikou":   [90, 85, 75, 115, 100, 115],
-        "Suicune":  [100, 75, 115, 90, 115, 85],
-        "Ho-Oh":    [106, 130, 90, 110, 154, 90],
-        "Lugia":    [106, 90, 130, 90, 154, 110],
-        "Deoxys":   [50, 150, 50, 150, 50, 150], // Attack Form (FR default)
+        /* CORE ENGINE - FRLG Master v45
+           Pokefinder-Aligned Logic for Stationary/Gift Pokemon.
+        */
+        const NATURES = ["Hardy", "Lonely", "Brave", "Adamant", "Naughty", "Bold", "Docile", "Relaxed", "Impish", "Lax", "Timid", "Hasty", "Serious", "Jolly", "Naive", "Modest", "Mild", "Quiet", "Bashful", "Rash", "Calm", "Gentle", "Sassy", "Careful", "Quirky"];
         
-        // --- Gifts & Starters ---
-        "Eevee":    [55, 55, 50, 45, 65, 55],
-        "Snorlax":  [160, 110, 65, 65, 110, 30],
-        "Lapras":   [130, 85, 80, 85, 95, 60],
-        "Bulbasaur": [45, 49, 49, 65, 65, 45],
-        "Charmander": [39, 52, 43, 60, 50, 65],
-        "Squirtle":  [44, 48, 65, 50, 64, 43],
-        "Aerodactyl": [80, 105, 65, 60, 75, 130],
-        "Omanyte":   [35, 40, 100, 90, 55, 35],
-        "Kabuto":    [30, 80, 90, 55, 45, 55],
-        
-        // --- Game Corner & Special ---
-        "Porygon":  [65, 60, 70, 85, 75, 40],
-        "Scyther":  [70, 110, 80, 55, 80, 105],
-        "Dratini":  [41, 64, 45, 50, 50, 50],
-        "Abra":     [25, 20, 15, 105, 55, 90],
-        "Hitmonlee": [50, 120, 53, 35, 110, 87],
-        "Hitmonchan": [50, 105, 79, 35, 110, 76]
-    };
-        
-        let sessionStats = {}; 
-        let globalSearchState = false;
-
-        // Core RNG Logic
-        const advanceRng = (seed) => {
-            return (Math.imul(seed, 0x41C64E6D) + 0x6073) >>> 0;
+        const SPECIES_DATABASE = {
+            "Eevee": [55, 55, 50, 45, 65, 55],
+            "Mewtwo": [106, 110, 90, 154, 90, 130],
+            "Zapdos": [90, 90, 85, 125, 90, 100],
+            "Articuno": [90, 85, 100, 95, 125, 85],
+            "Moltres": [90, 100, 90, 125, 85, 90],
+            "Snorlax": [160, 110, 65, 65, 110, 30],
+            "Lapras": [130, 85, 80, 85, 95, 60],
+            "Aerodactyl": [80, 105, 65, 60, 75, 130],
+            "Kabutops": [60, 115, 105, 65, 70, 80],
+            "Omastar": [70, 60, 125, 115, 70, 55],
+            "Bulbasaur": [45, 49, 49, 65, 65, 45],
+            "Charmander": [39, 52, 43, 60, 50, 65],
+            "Squirtle": [44, 48, 65, 50, 64, 43],
+            "Hitmonlee": [50, 120, 53, 35, 110, 87],
+            "Hitmonchan": [50, 105, 79, 35, 110, 76]
         };
 
-        // UI Initializer
+        let isSearching = false;
+        let marathonConsistency = {};
+
+        // INITIALIZATION
         window.onload = () => {
-            const dropdown = document.getElementById('speciesSelect');
-            Object.keys(speciesDb).forEach(name => {
-                const opt = document.createElement('option');
-                opt.value = name;
-                opt.textContent = name;
-                dropdown.appendChild(opt);
+            const speciesSel = document.getElementById('speciesSelect');
+            const targetNat = document.getElementById('targetNature');
+            const actualNat = document.getElementById('actualNature');
+
+            Object.keys(SPECIES_DATABASE).sort().forEach(s => {
+                speciesSel.options.add(new Option(s, s));
             });
 
-            ['goalNature', 'calcNature'].forEach(id => {
-                const select = document.getElementById(id);
-                natures.forEach(n => {
-                    const opt = document.createElement('option');
-                    opt.value = n;
-                    opt.textContent = n;
-                    select.appendChild(opt);
-                });
+            NATURES.forEach(n => {
+                targetNat.options.add(new Option(n, n));
+                actualNat.options.add(new Option(n, n));
             });
+            
+            // Default species for Eevee
+            speciesSel.value = "Eevee";
         };
 
-        function switchTab(event, tabName) {
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        function openTab(evt, tabName) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(tabName).classList.add('active');
-            event.currentTarget.classList.add('active');
+            evt.currentTarget.classList.add('active');
         }
 
-        // Stats Logic
-        function performIVCalculation() {
-            const level = parseInt(document.getElementById('calcLvl').value);
-            const natureIndex = natures.indexOf(document.getElementById('calcNature').value);
-            const baseStats = speciesDb[document.getElementById('speciesSelect').value];
-            const currentStats = [0,1,2,3,4,5].map(i => parseInt(document.getElementById('inStat'+i).value || 0));
+        /* STATS TO IVS LOGIC */
+        function calculateIVsFromStats() {
+            const species = document.getElementById('speciesSelect').value;
+            const level = 100;
+            const natureIdx = NATURES.indexOf(document.getElementById('actualNature').value);
+            const base = SPECIES_DATABASE[species];
+            const stats = [0,1,2,3,4,5].map(i => parseInt(document.getElementById('stat-'+i).value || 0));
 
-            for (let i = 0; i < 6; i++) {
-                let foundIV = false;
-                for (let iv = 31; iv >= 0; iv--) {
-                    let modifier = 1.0;
-                    if (i > 0) {
-                        const pairs = [[],[1,2],[1,5],[1,3],[1,4],[2,1],[],[2,5],[2,3],[2,4],[5,1],[5,2],[],[5,3],[5,4],[3,1],[3,2],[3,5],[],[3,4],[4,1],[4,2],[4,5],[4,3],[]][natureIndex];
-                        if (pairs[0] === i) modifier = 1.1;
-                        if (pairs[1] === i) modifier = 0.9;
+            const NATURE_MODS = [
+                [],[1,2],[1,5],[1,3],[1,4], [2,1],[],[2,5],[2,3],[2,4], [5,1],[5,2],[],[5,3],[5,4], [3,1],[3,2],[3,5],[],[3,4], [4,1],[4,2],[4,5],[4,3],[]
+            ];
+
+            for(let i=0; i<6; i++) {
+                let matched = false;
+                for(let iv=31; iv>=0; iv--) {
+                    let mod = 1.0;
+                    if(i > 0) {
+                        const pairs = NATURE_MODS[natureIdx];
+                        if(pairs[0] === i) mod = 1.1;
+                        if(pairs[1] === i) mod = 0.9;
                     }
                     
-                    let calculated;
-                    if (i === 0) {
-                        calculated = Math.floor((2 * baseStats[i] + iv) * level / 100) + level + 10;
+                    let calc;
+                    if(i === 0) {
+                        calc = Math.floor((2 * base[i] + iv) * level / 100) + level + 10;
                     } else {
-                        calculated = Math.floor((Math.floor((2 * baseStats[i] + iv) * level / 100) + 5) * modifier);
+                        calc = Math.floor((Math.floor((2 * base[i] + iv) * level / 100) + 5) * mod);
                     }
 
-                    if (calculated === currentStats[i]) {
-                        document.getElementById('ivField'+i).value = iv;
-                        foundIV = true;
+                    if(calc === stats[i]) {
+                        document.getElementById('iv-'+i).value = iv;
+                        matched = true;
                         break;
                     }
                 }
             }
-            document.getElementById('console').innerText = "Status: IV Extraction Successful. Fields updated.";
+            logUpdate("Extraction successful. Target IVs updated based on stats.");
         }
 
-        // Search Logic
-        function initiateMarathonSearch() {
-            globalSearchState = true;
+        /* RNG CORE LOGIC */
+        const rollRng = (seed) => (Math.imul(seed, 0x41C64E6D) + 0x6073) >>> 0;
+
+        function runMarathon() {
+            isSearching = true;
+            document.getElementById('startBtn').disabled = true;
+            document.getElementById('stopBtn').style.display = 'block';
+            
             const tid = parseInt(document.getElementById('tid').value);
             const sid = parseInt(document.getElementById('sid').value);
-            const targetNatureIdx = natures.indexOf(document.getElementById('goalNature').value);
-            const targetIVs = [0,1,2,3,4,5].map(i => parseInt(document.getElementById('ivField'+i).value));
-            const min = parseInt(document.getElementById('minAdv').value);
-            const max = parseInt(document.getElementById('maxAdv').value);
+            const targetNatIdx = NATURES.indexOf(document.getElementById('targetNature').value);
+            const targetIVs = [0,1,2,3,4,5].map(i => parseInt(document.getElementById('iv-'+i).value));
+            const minAdv = parseInt(document.getElementById('minAdv').value);
+            const maxAdv = parseInt(document.getElementById('maxAdv').value);
 
-            document.getElementById('btnRun').disabled = true;
-            document.getElementById('btnAbort').style.display = 'block';
-            
             let currentSeedIter = 0;
 
-            function processIterationSlice() {
-                const sliceStart = Date.now();
-                // Process for 200ms at a time to keep UI responsive
-                while (Date.now() - sliceStart < 200) {
-                    if (!globalSearchState || currentSeedIter > 0xFFFF) {
-                        finalizeSearchUI();
+            function processSlice() {
+                const startTime = Date.now();
+                // Process seeds in 150ms slices to keep browser responsive
+                while(Date.now() - startTime < 150) {
+                    if(!isSearching || currentSeedIter > 0xFFFF) {
+                        finalizeSearch();
                         return;
                     }
 
-                    let seedPath = currentSeedIter;
-                    // Fast forward to minimum advance
-                    for (let i = 0; i < min; i++) {
-                        seedPath = advanceRng(seedPath);
-                    }
+                    // POKEFINDER ALIGNMENT: 
+                    // Start from initial seed and roll to minAdv
+                    let currentState = currentSeedIter;
+                    for(let i=0; i < minAdv; i++) currentState = rollRng(currentState);
 
-                    // Check frame range
-                    for (let frame = min; frame <= max; frame++) {
-                        let v1 = advanceRng(seedPath);
-                        let v2 = advanceRng(v1);
-                        let v3 = advanceRng(v2);
-                        let v4 = advanceRng(v3);
-                        let v5 = advanceRng(v4);
+                    // Scan the frame window
+                    for(let frame = minAdv; frame <= maxAdv; frame++) {
+                        let v1 = currentState;           // Advance N
+                        let v2 = rollRng(v1);             // Advance N+1
+                        let v3 = rollRng(v2);             // Advance N+2
+                        let v4 = rollRng(v3);             // Advance N+3
+                        let v5 = rollRng(v4);             // Advance N+4
 
+                        // POKEFINDER PID: Lower 16 bits of State N and State N+1
                         let pid = ((v2 >>> 16) << 16) | (v1 >>> 16);
                         
-                        if ((pid >>> 0) % 25 === targetNatureIdx) {
-                            // Method check closures
-                            const validator = (valA, valB, methodId) => {
-                                let ivs = [valA & 31, (valA >> 5) & 31, (valA >> 10) & 31, valB & 31, (valB >> 5) & 31, (valB >> 10) & 31];
-                                if (ivs.every((v, idx) => v === targetIVs[idx])) {
-                                    recordResult(currentSeedIter, frame, methodId, ivs, (tid ^ sid ^ (pid & 0xFFFF) ^ (pid >>> 16)) < 8);
-                                }
-                            };
-                            
-                            validator(v3 >>> 16, v4 >>> 16, 1);
-                            validator(v3 >>> 16, v5 >>> 16, 2);
-                            validator(v4 >>> 16, v5 >>> 16, 4);
+                        if((pid >>> 0) % 25 === targetNatIdx) {
+                            // Method 1: IVs from N+2, N+3
+                            validateAndLog(currentSeedIter, frame, 1, v3 >>> 16, v4 >>> 16, targetIVs, tid, sid, pid);
+                            // Method 2: IVs from N+2, N+4
+                            validateAndLog(currentSeedIter, frame, 2, v3 >>> 16, v5 >>> 16, targetIVs, tid, sid, pid);
+                            // Method 4: IVs from N+3, N+4
+                            validateAndLog(currentSeedIter, frame, 4, v4 >>> 16, v5 >>> 16, targetIVs, tid, sid, pid);
                         }
-                        seedPath = v1;
+                        currentState = v2; // Iterate loop to Advance N+1
                     }
 
                     currentSeedIter++;
-                    if (currentSeedIter % 1000 === 0) {
-                        document.getElementById('console').innerText = `Searching Memory... ${(currentSeedIter/655.35).toFixed(1)}%`;
+                    if(currentSeedIter % 1000 === 0) {
+                        logUpdate(`Searching... ${(currentSeedIter/655.35).toFixed(1)}% of Seed Space Exhausted.`);
                     }
                 }
-                setTimeout(processIterationSlice, 1);
+                setTimeout(processSlice, 0);
             }
-            processIterationSlice();
+            processSlice();
         }
 
-        function recordResult(seed, adv, meth, ivs, isShiny) {
+        function validateAndLog(seed, frame, method, rawA, rawB, target, tid, sid, pid) {
+            let ivs = [rawA & 31, (rawA >> 5) & 31, (rawA >> 10) & 31, rawB & 31, (rawB >> 5) & 31, (rawB >> 10) & 31];
+            
+            // Check for strict match
+            if(ivs.every((v, i) => v === target[i])) {
+                let isShiny = (tid ^ sid ^ (pid & 0xFFFF) ^ (pid >>> 16)) < 8;
+                appendDiscovery(seed, frame, method, ivs, isShiny);
+            }
+        }
+
+        function appendDiscovery(seed, adv, meth, ivs, shiny) {
             const hex = "0x" + seed.toString(16).toUpperCase().padStart(4, '0');
-            const logBody = document.getElementById('resultsLogBody');
+            const logBody = document.getElementById('marathonResults');
             const row = logBody.insertRow(0);
-            
-            if (isShiny) row.className = "shiny-row";
-            
+            if(shiny) row.className = "shiny-row";
+
             row.innerHTML = `
                 <td>${hex}</td>
                 <td>${adv}</td>
                 <td><span class="badge m${meth}">M${meth}</span></td>
                 <td>${ivs.join('/')}</td>
-                <td>${isShiny ? 'SHINY ✨' : 'No'}</td>
-                <td><button class="btn-sm btn-green" onclick="transferToExplorer('${hex}')">Map</button></td>
+                <td>${shiny ? '✨ SHINY' : 'No'}</td>
+                <td><button class="btn-success" style="padding:4px 10px; font-size:10px;" onclick="syncToExplorer('${hex}')">FOCUS</button></td>
             `;
-            
-            // Statistics Update
-            if (!sessionStats[hex]) {
-                sessionStats[hex] = { count: 0, totalAdv: 0 };
-            }
-            sessionStats[hex].count++;
-            sessionStats[hex].totalAdv += adv;
-            refreshTrackerTable();
+
+            // Matrix Tracking
+            if(!marathonConsistency[hex]) marathonConsistency[hex] = { hits: 0, totalAdv: 0 };
+            marathonConsistency[hex].hits++;
+            marathonConsistency[hex].totalAdv += adv;
+            refreshMatrix();
         }
 
-        function refreshTrackerTable() {
-            const body = document.getElementById('trackerBody');
-            body.innerHTML = "";
-            
-            const sortedSeeds = Object.keys(sessionStats).sort((a,b) => sessionStats[b].count - sessionStats[a].count);
-            
+        function refreshMatrix() {
+            const matrixBody = document.getElementById('consistencyBody');
+            matrixBody.innerHTML = "";
+            const sortedSeeds = Object.keys(marathonConsistency).sort((a,b) => marathonConsistency[b].hits - marathonConsistency[a].hits);
+
             sortedSeeds.forEach(s => {
-                const data = sessionStats[s];
-                const row = body.insertRow();
-                if (data.count > 1) row.className = "sticky-seed";
-                
+                const row = matrixBody.insertRow();
+                if(marathonConsistency[s].hits > 1) row.className = "repeat-seed";
                 row.innerHTML = `
                     <td>${s}</td>
-                    <td>${data.count}x</td>
-                    <td>${Math.round(data.totalAdv / data.count)}</td>
-                    <td><button class="btn-sm btn-green" onclick="transferToExplorer('${s}')">Target This</button></td>
+                    <td>${marathonConsistency[s].hits} Hits</td>
+                    <td>${Math.round(marathonConsistency[s].totalAdv / marathonConsistency[s].hits)}</td>
+                    <td><button class="btn-primary" style="padding:4px 8px; font-size:10px;" onclick="syncToExplorer('${s}')">SYNC</button></td>
                 `;
             });
         }
 
-        function transferToExplorer(seed) {
-            document.getElementById('mapTargetSeed').value = seed;
-            switchTab({currentTarget: document.querySelectorAll('.tab-btn')[1]}, 'shiny');
+        function logUpdate(msg) { document.getElementById('status-bar').innerText = `System Status: ${msg}`; }
+        
+        function stopSearch() { isSearching = false; }
+
+        function finalizeSearch() {
+            isSearching = false;
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('stopBtn').style.display = 'none';
+            logUpdate("Full Marathon Scan Concluded.");
         }
 
-        function finalizeSearchUI() {
-            globalSearchState = false;
-            document.getElementById('btnRun').disabled = false;
-            document.getElementById('btnAbort').style.display = 'none';
-            document.getElementById('console').innerText = "Marathon Sequence Complete.";
+        function syncToExplorer(hex) {
+            document.getElementById('targetHex').value = hex;
+            openTab({currentTarget: document.querySelectorAll('.tab-btn')[1]}, 'explorer');
         }
 
-        // Explorer Logic
-        function generateShinyMap() {
-            const tid = 14448;
-            const sid = 14777;
-            const startSeed = parseInt(document.getElementById('mapTargetSeed').value, 16);
-            const depth = parseInt(document.getElementById('mapDepth').value);
-            const body = document.getElementById('mapResultsBody');
+        /* EXPLORER LOGIC */
+        function exploreSeed() {
+            const seed = parseInt(document.getElementById('targetHex').value, 16);
+            const depth = parseInt(document.getElementById('depth').value);
+            const tid = parseInt(document.getElementById('tid').value);
+            const sid = parseInt(document.getElementById('sid').value);
+            const explorerBody = document.getElementById('explorerBody');
             
-            body.innerHTML = "";
-            let current = startSeed;
+            explorerBody.innerHTML = "";
+            let state = seed;
 
-            for (let f = 0; f <= depth; f++) {
-                let v1 = advanceRng(current);
-                let v2 = advanceRng(v1);
-                let v3 = advanceRng(v2);
-                let v4 = advanceRng(v3);
-                
+            for(let f=0; f<=depth; f++) {
+                let v1 = state;
+                let v2 = rollRng(v1);
+                let v3 = rollRng(v2);
+                let v4 = rollRng(v3);
+
                 let pid = ((v2 >>> 16) << 16) | (v1 >>> 16);
-                let checkShiny = (tid ^ sid ^ (pid & 0xFFFF) ^ (pid >>> 16)) < 8;
-                
-                if (checkShiny) {
-                    let a = v3 >>> 16;
-                    let b = v4 >>> 16;
-                    let ivStr = `${a&31}/${(a>>5)&31}/${(a>>10)&31}/${b&31}/${(b>>5)&31}/${(b>>10)&31}`;
-                    
-                    const tr = document.createElement('tr');
-                    tr.className = "shiny-row";
-                    tr.innerHTML = `<td>${f}</td><td>${natures[(pid>>>0)%25]}</td><td>${ivStr}</td><td>YES ✨</td>`;
-                    body.appendChild(tr);
+                let isShiny = (tid ^ sid ^ (pid & 0xFFFF) ^ (pid >>> 16)) < 8;
+
+                if(isShiny) {
+                    let iv1 = v3 >>> 16;
+                    let iv2 = v4 >>> 16;
+                    let ivString = `${iv1&31}/${(iv1>>5)&31}/${(iv1>>10)&31}/${iv2&31}/${(iv2>>5)&31}/${(iv2>>10)&31}`;
+                    const row = explorerBody.insertRow();
+                    row.className = "shiny-row";
+                    row.innerHTML = `<td>${f}</td><td>${NATURES[pid%25]}</td><td>${ivString}</td><td>SHINY! ✨</td>`;
                 }
-                current = v1;
+                state = v2;
             }
-            if (body.innerHTML === "") {
-                body.innerHTML = "<tr><td colspan='4' style='text-align:center'>No shinies found in this depth.</td></tr>";
-            }
+            if(explorerBody.innerHTML === "") explorerBody.innerHTML = "<tr><td colspan='4'>No shiny results found for this seed within the depth limit.</td></tr>";
         }
 
-        // Calibration Logic
-        function processCalibration() {
-            const exp = parseInt(document.getElementById('calExp').value);
-            const hit = parseInt(document.getElementById('calHit').value);
-            const frameDiff = hit - exp;
-            const ms = Math.round((frameDiff / 60) * 1000);
-            
-            document.getElementById('latencyResult').innerText = `${ms}ms (${frameDiff > 0 ? '+' : ''}${frameDiff} frames)`;
+        /* CALIBRATION LOGIC */
+        function calculateSync() {
+            const target = parseInt(document.getElementById('targetF').value);
+            const actual = parseInt(document.getElementById('actualF').value);
+            const frameDiff = actual - target;
+            const msDiff = Math.round((frameDiff / 60) * 1000);
+            const display = document.getElementById('syncOutput');
+            display.innerText = `${msDiff}ms (${frameDiff > 0 ? '+' : ''}${frameDiff} f)`;
+            display.style.color = Math.abs(frameDiff) < 4 ? "var(--success)" : "var(--accent)";
         }
     </script>
 </body>
