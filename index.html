@@ -3,345 +3,588 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FRLG Master v37</title>
+    <title>FRLG Master v41 - High Fidelity Edition</title>
     <style>
-        :root { --primary: #1877f2; --bg: #f0f2f5; --card: #ffffff; --text: #1c1e21; --shiny: #ffcc00; --accent: #e0245e; --btn-gray: #65676b; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); padding: 5px; color: var(--text); margin: 0; }
-        .container { background: var(--card); padding: 15px; border-radius: 12px; max-width: 850px; margin: auto; box-shadow: 0 4px 12px rgba(0,0,0,0.1); min-height: 95vh; }
-        .tabs { display: flex; background: #eee; border-radius: 8px; margin-bottom: 12px; overflow: hidden; }
-        .tab-btn { flex: 1; padding: 12px; border: none; cursor: pointer; font-weight: bold; background: #eee; font-size: 11px; }
-        .tab-btn.active { background: var(--primary); color: white; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        .section-box { background: #f8f9fa; border: 1px solid #e9ecef; padding: 12px; border-radius: 10px; margin-bottom: 15px; }
-        .section-title { font-size: 11px; font-weight: bold; color: var(--primary); text-transform: uppercase; margin-bottom: 8px; border-bottom: 1px solid #eee; padding-bottom: 4px; display: flex; justify-content: space-between; align-items: center; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(85px, 1fr)); gap: 8px; margin: 10px 0; }
-        .input-group { display: flex; flex-direction: column; font-weight: bold; font-size: 10px; color: #65676b; }
-        input, select { padding: 10px; border: 1px solid #ccd0d5; border-radius: 8px; margin-top: 4px; font-size: 14px; width: 100%; box-sizing: border-box;}
-        button.main-btn { padding: 15px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; color: white; margin-top: 5px; transition: 0.3s; }
-        .btn-blue { background: var(--primary); }
-        .btn-blue:disabled { background: #a0c4ff; cursor: not-allowed; }
-        .btn-matrix { background: #e4e6eb; color: #050505; border: 1px solid #ccd0d5; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 10px; font-weight: bold; }
-        .btn-matrix:hover { background: #d8dadf; }
-        .btn-stop { background: var(--btn-gray); margin-top: 8px; display: none; }
-        .btn-action { padding: 8px; font-size: 11px; border-radius: 5px; border: 1px solid #ddd; cursor: pointer; background: white; font-weight: bold; color: var(--btn-gray); flex: 1; }
-        #progress-container { width: 100%; background: #eee; height: 10px; border-radius: 5px; margin: 10px 0; display: none; overflow: hidden; }
-        #progress-bar { width: 0%; height: 100%; background: var(--primary); transition: width 0.1s; }
-        #console { padding: 12px; border-radius: 8px; font-family: monospace; font-size: 12px; background: #1c1e21; color: #31df31; border-left: 5px solid #31df31; margin-top: 10px; }
-        .log-table { width: 100%; border-collapse: collapse; font-size: 11px; background: #fff; border: 1px solid #ddd; margin-top: 15px; }
-        .log-table th { background: #f0f2f5; padding: 8px; border: 1px solid #ddd; text-align: left; }
-        .log-table td { padding: 8px; border: 1px solid #ddd; font-family: monospace; }
-        .shiny-row { background-color: #fff9e6 !important; font-weight: bold; }
-        .center-row { background-color: #e7f3ff !important; font-weight: bold; border-left: 3px solid var(--primary); }
-        .trigger-note { font-size: 11px; color: #d9534f; background: #fdf7f7; padding: 8px; border-radius: 5px; margin-bottom: 10px; border-left: 4px solid #d9534f; }
-        .collapsible-content { display: block; overflow: hidden; transition: max-height 0.2s ease-out; }
+        :root { 
+            --primary: #1877f2; 
+            --bg: #f0f2f5; 
+            --card: #ffffff; 
+            --text: #1c1e21; 
+            --shiny: #ffcc00; 
+            --accent: #e0245e; 
+            --success: #28a745; 
+            --warning: #ff9800; 
+            --dark: #1c1e21;
+        }
+
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: var(--bg); 
+            padding: 15px; 
+            color: var(--text); 
+            margin: 0; 
+            line-height: 1.5;
+        }
+
+        .container { 
+            background: var(--card); 
+            padding: 25px; 
+            border-radius: 16px; 
+            max-width: 1050px; 
+            margin: auto; 
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12); 
+            min-height: 90vh; 
+        }
+
+        /* Navigation Tabs */
+        .tabs { 
+            display: flex; 
+            background: #e4e6eb; 
+            border-radius: 12px; 
+            margin-bottom: 25px; 
+            padding: 6px; 
+            gap: 8px; 
+            border: 1px solid #ddd;
+        }
+
+        .tab-btn { 
+            flex: 1; 
+            padding: 14px; 
+            border: none; 
+            cursor: pointer; 
+            font-weight: 700; 
+            background: transparent; 
+            border-radius: 10px; 
+            transition: all 0.3s ease; 
+            font-size: 13px; 
+            color: #65676b; 
+            text-transform: uppercase;
+        }
+
+        .tab-btn.active { 
+            background: var(--card); 
+            color: var(--primary); 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08); 
+        }
+
+        .tab-content { 
+            display: none; 
+        }
+
+        .tab-content.active { 
+            display: block; 
+            animation: fadeIn 0.4s ease-out; 
+        }
+
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(5px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        /* Content Blocks */
+        .section-box { 
+            background: #f7f8fa; 
+            border: 1px solid #dee2e6; 
+            padding: 20px; 
+            border-radius: 14px; 
+            margin-bottom: 20px; 
+        }
+
+        .section-title { 
+            font-size: 13px; 
+            font-weight: 900; 
+            color: #4b4f56; 
+            text-transform: uppercase; 
+            margin-bottom: 15px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            letter-spacing: 1px;
+            border-bottom: 2px solid #edf0f5;
+            padding-bottom: 8px;
+        }
+
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); 
+            gap: 15px; 
+            margin-bottom: 15px; 
+        }
+
+        .input-group { 
+            display: flex; 
+            flex-direction: column; 
+            font-weight: 700; 
+            font-size: 11px; 
+            color: #606770; 
+        }
+
+        input, select { 
+            padding: 14px; 
+            border: 2px solid #ccd0d5; 
+            border-radius: 10px; 
+            margin-top: 6px; 
+            font-size: 16px; 
+            width: 100%; 
+            box-sizing: border-box; 
+            background: white;
+            transition: border-color 0.2s;
+        }
+
+        input:focus { 
+            border-color: var(--primary); 
+            outline: none; 
+            box-shadow: 0 0 0 4px rgba(24, 119, 242, 0.1); 
+        }
+
+        /* Buttons */
+        button.main-btn { 
+            padding: 18px; 
+            border: none; 
+            border-radius: 12px; 
+            cursor: pointer; 
+            font-weight: 800; 
+            width: 100%; 
+            color: white; 
+            margin-top: 10px; 
+            transition: all 0.2s; 
+            text-transform: uppercase; 
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
+
+        .btn-blue { background: var(--primary); box-shadow: 0 5px 0 #1156b3; }
+        .btn-blue:hover { filter: brightness(1.05); transform: translateY(-2px); }
+        .btn-blue:active { transform: translateY(2px); box-shadow: 0 1px 0 #1156b3; }
+        
+        .btn-stop { background: var(--accent); display: none; box-shadow: 0 5px 0 #a01a43; }
+
+        /* Output & Tables */
+        #console { 
+            padding: 20px; 
+            border-radius: 12px; 
+            font-family: 'Fira Code', 'Consolas', monospace; 
+            font-size: 14px; 
+            background: var(--dark); 
+            color: #00ff41; 
+            border-left: 8px solid var(--success); 
+            margin: 20px 0; 
+            min-height: 30px; 
+            box-shadow: inset 0 2px 15px rgba(0,0,0,0.4);
+        }
+
+        .log-table { 
+            width: 100%; 
+            border-collapse: separate; 
+            border-spacing: 0;
+            font-size: 13px; 
+            background: white; 
+            border-radius: 12px; 
+            overflow: hidden; 
+            border: 1px solid #dddfe2; 
+            margin-top: 15px; 
+        }
+
+        .log-table th { 
+            background: #f5f6f7; 
+            padding: 15px; 
+            border-bottom: 2px solid #dddfe2; 
+            text-align: left; 
+            color: #4b4f56; 
+            font-weight: 800; 
+        }
+
+        .log-table td { 
+            padding: 14px; 
+            border-bottom: 1px solid #eee; 
+            font-family: 'Roboto Mono', monospace; 
+        }
+
+        .sticky-seed { 
+            background-color: #e6ffed !important; 
+            font-weight: bold; 
+            color: #155724; 
+            border-left: 6px solid var(--success); 
+        }
+
+        .shiny-row { 
+            background: linear-gradient(90deg, #fff9db, #ffffff); 
+            font-weight: bold; 
+        }
+
+        /* Method Badges */
+        .badge { 
+            padding: 4px 8px; 
+            border-radius: 6px; 
+            font-size: 10px; 
+            color: white; 
+            font-weight: 900; 
+            display: inline-block;
+        }
+        .m1 { background: #6c757d; } 
+        .m2 { background: #17a2b8; } 
+        .m4 { background: #6f42c1; }
+
+        .btn-sm { 
+            border: none; 
+            padding: 8px 14px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-size: 11px; 
+            font-weight: 800; 
+        }
+        .btn-green { background: var(--success); color: white; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="tabs">
-            <button class="tab-btn active" onclick="openTab('search')">Main Hub</button>
-            <button class="tab-btn" onclick="openTab('shiny')">Shiny Hunter</button>
-            <button class="tab-btn" onclick="openTab('calib')">Calibration</button>
+            <button class="tab-btn active" onclick="switchTab(event, 'search')">Marathon Center</button>
+            <button class="tab-btn" onclick="switchTab(event, 'shiny')">Shiny Explorer</button>
+            <button class="tab-btn" onclick="switchTab(event, 'calib')">Sync Logic</button>
         </div>
 
         <div id="search" class="tab-content active">
             <div class="section-box">
-                <div class="section-title">1. Trainer & Target Info</div>
+                <div class="section-title">1. Trainer & Target Details</div>
                 <div class="grid">
-                    <div class="input-group">TID <input type="number" id="tid" value="38454"></div>
-                    <div class="input-group">SID <input type="number" id="sid" value="14448"></div>
-                    <div class="input-group">Species <select id="searchSpecies" onchange="syncSpeciesStats()"></select></div>
-                    <div class="input-group">Target Nature <select id="nat"></select></div>
-                </div>
-                <div id="searchTrigger" class="trigger-note">Select a species.</div>
-            </div>
-
-            <div class="section-box" style="background: #eef7ff; border: 1px solid #b8daff;">
-                <div class="section-title" style="cursor:pointer;" onclick="toggleIV()">
-                    2. IV Calculator (Click to Toggle) <span id="ivToggleIndicator">[–]</span>
-                </div>
-                <div id="ivCalcBody" class="collapsible-content">
-                    <div class="grid">
-                        <div class="input-group">Level <input type="number" id="calcLvl" value="25"></div>
-                        <div class="input-group">Actual Nature <select id="calcNat"></select></div>
-                    </div>
-                    <div class="grid">
-                        <input type="number" id="s0" placeholder="HP Stat"><input type="number" id="s1" placeholder="Atk Stat"><input type="number" id="s2" placeholder="Def Stat">
-                        <input type="number" id="s3" placeholder="SpA Stat"><input type="number" id="s4" placeholder="SpD Stat"><input type="number" id="s5" placeholder="Spe Stat">
-                    </div>
-                    <button class="main-btn btn-blue" style="padding:10px; font-size:12px;" onclick="calculateExactIVs()">Analyze & Fill Searcher</button>
-                    <div id="ivResult" style="margin-top:8px; font-size:11px; font-weight:bold; text-align:center; color:#1877f2;">---</div>
+                    <div class="input-group">TID <input type="number" id="tid" value="14448"></div>
+                    <div class="input-group">SID <input type="number" id="sid" value="14777"></div>
+                    <div class="input-group">Species <select id="speciesSelect" onchange="updateBaseStats()"></select></div>
+                    <div class="input-group">Goal Nature <select id="goalNature"></select></div>
                 </div>
             </div>
 
             <div class="section-box">
-                <div class="section-title">3. Seed Searcher (Targeted Window)</div>
-                <div class="grid">
-                    <input type="number" id="iv0" placeholder="HP IV"><input type="number" id="iv1" placeholder="Atk IV"><input type="number" id="iv2" placeholder="Def IV">
-                    <input type="number" id="iv3" placeholder="SpA IV"><input type="number" id="iv4" placeholder="SpD IV"><input type="number" id="iv5" placeholder="Spe IV">
+                <div class="section-title">2. Statistics Analyzer (IV Extractor)</div>
+                <div class="grid" style="grid-template-columns: 1fr 1fr 1fr;">
+                    <div class="input-group">Lvl <input type="number" id="calcLvl" value="100"></div>
+                    <div class="input-group">Nature <select id="calcNature"></select></div>
+                    <div class="input-group">Action <button class="btn-sm btn-green" style="margin-top:5px" onclick="performIVCalculation()">Analyze Stats</button></div>
                 </div>
                 <div class="grid">
-                    <div class="input-group">Min Advance <input type="number" id="minFrames" value="1000"></div>
-                    <div class="input-group">Max Advance <input type="number" id="maxFrames" value="5000"></div>
-                </div>
-                <button class="main-btn btn-blue" id="runBtn" onclick="runTurbo()">Search All Seeds in Window</button>
-                <button class="main-btn btn-stop" id="stopBtn" onclick="isSearching=false">STOP SEARCH</button>
-                <div id="progress-container"><div id="progress-bar"></div></div>
-                <div id="console">Ready...</div>
-                <div style="display:flex; gap:10px; margin-top:10px;">
-                    <button class="btn-action" onclick="downloadCSV()">📥 Download CSV</button>
-                    <button class="btn-action" onclick="clearSearchLog()">🗑️ Clear Log</button>
+                    <div class="input-group">HP <input type="number" id="inStat0"></div>
+                    <div class="input-group">Atk <input type="number" id="inStat1"></div>
+                    <div class="input-group">Def <input type="number" id="inStat2"></div>
+                    <div class="input-group">SpA <input type="number" id="inStat3"></div>
+                    <div class="input-group">SpD <input type="number" id="inStat4"></div>
+                    <div class="input-group">Spe <input type="number" id="inStat5"></div>
                 </div>
             </div>
 
-            <div class="log-wrap"><table class="log-table" id="mainLogTable"><thead><tr><th>Seed</th><th>Adv</th><th>IVs</th><th>Gender</th><th>Shiny</th><th>Inspect</th></tr></thead><tbody id="logBody"></tbody></table></div>
-            
-            <div id="matrixSection" style="display:none; margin-top:20px; padding:15px; background: #fff; border: 1px solid #ccd0d5; border-radius:8px;">
-                <div class="section-title" style="color:#050505;">Adjacency Matrix (Seed: <span id="matSeed" style="color:var(--primary);"></span>)</div>
-                <table class="log-table"><thead><tr><th>Adv</th><th>Nature</th><th>IVs</th><th>Gender</th><th>Shiny</th></tr></thead><tbody id="matrixBody"></tbody></table>
+            <div class="section-box" style="border-top: 6px solid var(--primary);">
+                <div class="section-title">3. Deep Scan (Triple Method M1/M2/M4)</div>
+                <div class="grid">
+                    <div class="input-group">HP <input type="number" id="ivField0"></div>
+                    <div class="input-group">Atk <input type="number" id="ivField1"></div>
+                    <div class="input-group">Def <input type="number" id="ivField2"></div>
+                    <div class="input-group">SpA <input type="number" id="ivField3"></div>
+                    <div class="input-group">SpD <input type="number" id="ivField4"></div>
+                    <div class="input-group">Spe <input type="number" id="ivField5"></div>
+                </div>
+                <div class="grid">
+                    <div class="input-group">Min Advance <input type="number" id="minAdv" value="1000"></div>
+                    <div class="input-group">Max Advance <input type="number" id="maxAdv" value="6500"></div>
+                </div>
+                <button class="main-btn btn-blue" id="btnRun" onclick="initiateMarathonSearch()">Launch Marathon Scan</button>
+                <button class="main-btn btn-stop" id="btnAbort" onclick="globalSearchState=false">Kill Process</button>
+                <div id="console">System Ready. Verify IVs before scanning.</div>
             </div>
+
+            <div class="section-box" style="background: white; border: 3px solid var(--primary);">
+                <div class="section-title" style="color:var(--primary)">🏆 Consistency Matrix (Repeat Hits)</div>
+                <table class="log-table">
+                    <thead><tr><th>Seed</th><th>Hits</th><th>Average Frame</th><th>Sync</th></tr></thead>
+                    <tbody id="trackerBody"></tbody>
+                </table>
+            </div>
+
+            <div class="section-title">Marathon Log</div>
+            <table class="log-table">
+                <thead><tr><th>Seed</th><th>Advance</th><th>Method</th><th>IVs</th><th>Shiny</th><th>Action</th></tr></thead>
+                <tbody id="resultsLogBody"></tbody>
+            </table>
         </div>
 
         <div id="shiny" class="tab-content">
-            <div class="grid">
-                <div class="input-group">Seed <input type="text" id="activeSeed" placeholder="0xDF91"></div>
-                <div class="input-group">Range <input type="number" id="shinyMax" value="10000"></div>
+            <div class="section-box">
+                <div class="section-title">Seed Mapping</div>
+                <div class="grid">
+                    <div class="input-group">Target Seed <input type="text" id="mapTargetSeed" value="0x0000"></div>
+                    <div class="input-group">Max Frames <input type="number" id="mapDepth" value="25000"></div>
+                </div>
+                <button class="main-btn btn-blue" onclick="generateShinyMap()">Search for Sparkles</button>
             </div>
-            <button class="main-btn" id="shinyBtn" style="background:var(--accent);" onclick="huntShinies()">Scan for Shinies ✨</button>
-            <div id="shinyResults"><table class="log-table"><thead><tr><th>Adv</th><th>Nature</th><th>IVs</th><th>Gender</th></tr></thead><tbody id="shinyBody"></tbody></table></div>
+            <table class="log-table">
+                <thead><tr><th>Advance</th><th>Nature</th><th>IV Spread</th><th>Shiny</th></tr></thead>
+                <tbody id="mapResultsBody"></tbody>
+            </table>
         </div>
 
         <div id="calib" class="tab-content">
-            <div class="grid">
-                <div class="input-group">Target Adv <input type="number" id="tAdv" value="60000"></div>
-                <div class="input-group">Hit Adv <input type="number" id="hAdv" value="0"></div>
+            <div class="section-box">
+                <div class="section-title">Hardware Latency</div>
+                <div class="grid">
+                    <div class="input-group">Target <input type="number" id="calExp" value="2000"></div>
+                    <div class="input-group">Actual <input type="number" id="calHit"></div>
+                </div>
+                <div id="latencyResult" style="padding:40px; text-align:center; font-size:28px; font-weight:900; color:var(--primary);">0ms</div>
+                <button class="main-btn btn-blue" onclick="processCalibration()">Update Offset</button>
             </div>
-            <div id="calibResult" style="padding:20px; text-align:center; font-size:16px; font-weight:bold; background:#e7f3ff; border-radius:10px;">Ready</div>
-            <button class="main-btn btn-blue" onclick="calculateOffset()">Calculate Offset</button>
         </div>
     </div>
 
     <script>
+        // Data Structures
         const natures = ["Hardy", "Lonely", "Brave", "Adamant", "Naughty", "Bold", "Docile", "Relaxed", "Impish", "Lax", "Timid", "Hasty", "Serious", "Jolly", "Naive", "Modest", "Mild", "Quiet", "Bashful", "Rash", "Calm", "Gentle", "Sassy", "Careful", "Quirky"];
-        const pokedex = {
-            "Bulbasaur": { stats: [45, 49, 49, 65, 65, 45], note: "GIFT: Last 'A' press on 'Do you want Bulbasaur?'" },
-            "Charmander": { stats: [39, 52, 43, 60, 50, 65], note: "GIFT: Last 'A' press on 'Do you want Charmander?'" },
-            "Squirtle": { stats: [44, 48, 65, 50, 64, 43], note: "GIFT: Last 'A' press on 'Do you want Squirtle?'" },
-            "Eevee": { stats: [55, 55, 50, 45, 65, 55], note: "GIFT: Last 'A' press on 'You obtained an EEVEE!'" },
-            "Omanyte": { stats: [35, 40, 100, 90, 55, 35], note: "FOSSIL: Last 'A' press on receipt dialogue." },
-            "Kabuto": { stats: [30, 80, 90, 55, 45, 55], note: "FOSSIL: Last 'A' press on receipt dialogue." },
-            "Aerodactyl": { stats: [80, 105, 65, 60, 75, 130], note: "FOSSIL: Last 'A' press on receipt dialogue." },
-            "Articuno": { stats: [90, 85, 100, 95, 125, 85], note: "STATIONARY: Last 'A' press before cry." },
-            "Zapdos": { stats: [90, 90, 85, 125, 90, 100], note: "STATIONARY: Last 'A' press before cry." },
-            "Moltres": { stats: [90, 100, 90, 125, 85, 90], note: "STATIONARY: Last 'A' press before cry." },
-            "Mewtwo": { stats: [106, 110, 90, 154, 90, 130], note: "STATIONARY: Last 'A' press before battle." },
-            "Snorlax": { stats: [160, 110, 65, 65, 110, 30], note: "STATIONARY: Press A to play Poké Flute." },
-            "Lapras": { stats: [130, 85, 80, 85, 95, 60], note: "GIFT: Silph Co. employee dialogue." },
-            "Porygon": { stats: [65, 60, 70, 85, 75, 40], note: "GAME CORNER: Purchase dialogue." },
-            "Abra": { stats: [25, 20, 15, 105, 55, 90], note: "GAME CORNER: Purchase dialogue." },
-            "Scyther": { stats: [70, 110, 80, 55, 80, 105], note: "GAME CORNER: Purchase dialogue." },
-            "Pinsir": { stats: [65, 125, 100, 55, 70, 85], note: "GAME CORNER: Purchase dialogue." },
-            "Hitmonlee": { stats: [50, 120, 53, 35, 110, 87], note: "GIFT: Pokéball selection (Dojo)." },
-            "Hitmonchan": { stats: [50, 105, 79, 35, 110, 76], note: "GIFT: Pokéball selection (Dojo)." }
+        const speciesDb = { 
+            "Eevee": [55, 55, 50, 45, 65, 55], 
+            "Mewtwo": [106, 110, 90, 154, 90, 130],
+            "Zapdos": [90, 90, 85, 125, 90, 100], 
+            "Articuno": [90, 85, 100, 95, 125, 85],
+            "Moltres": [90, 100, 90, 125, 85, 90], 
+            "Snorlax": [160, 110, 65, 65, 110, 30]
+        };
+        
+        let sessionStats = {}; 
+        let globalSearchState = false;
+
+        // Core RNG Logic
+        const advanceRng = (seed) => {
+            return (Math.imul(seed, 0x41C64E6D) + 0x6073) >>> 0;
         };
 
-        let isSearching = false;
-        let matchesFound = 0;
+        // UI Initializer
+        window.onload = () => {
+            const dropdown = document.getElementById('speciesSelect');
+            Object.keys(speciesDb).forEach(name => {
+                const opt = document.createElement('option');
+                opt.value = name;
+                opt.textContent = name;
+                dropdown.appendChild(opt);
+            });
 
-        function openTab(id) {
+            ['goalNature', 'calcNature'].forEach(id => {
+                const select = document.getElementById(id);
+                natures.forEach(n => {
+                    const opt = document.createElement('option');
+                    opt.value = n;
+                    opt.textContent = n;
+                    select.appendChild(opt);
+                });
+            });
+        };
+
+        function switchTab(event, tabName) {
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            if(event) event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+            event.currentTarget.classList.add('active');
         }
 
-        function toggleIV() {
-            const body = document.getElementById('ivCalcBody');
-            const indicator = document.getElementById('ivToggleIndicator');
-            if (body.style.display === "none") {
-                body.style.display = "block"; indicator.innerText = "[–]";
-            } else {
-                body.style.display = "none"; indicator.innerText = "[+]";
-            }
-        }
+        // Stats Logic
+        function performIVCalculation() {
+            const level = parseInt(document.getElementById('calcLvl').value);
+            const natureIndex = natures.indexOf(document.getElementById('calcNature').value);
+            const baseStats = speciesDb[document.getElementById('speciesSelect').value];
+            const currentStats = [0,1,2,3,4,5].map(i => parseInt(document.getElementById('inStat'+i).value || 0));
 
-        const next = (s) => (Math.imul(s, 0x41C64E6D) + 0x6073) >>> 0;
-
-        function syncSpeciesStats() {
-            const species = document.getElementById('searchSpecies').value;
-            const entry = pokedex[species];
-            document.getElementById('searchTrigger').innerText = entry.note || "";
-        }
-
-        function calculateExactIVs() {
-            const lvl = parseInt(document.getElementById('calcLvl').value);
-            const natIdx = natures.indexOf(document.getElementById('calcNat').value);
-            const species = document.getElementById('searchSpecies').value;
-            const bases = pokedex[species].stats;
-            const stats = [0,1,2,3,4,5].map(i => parseInt(document.getElementById('s'+i).value || 0));
-            let results = [];
-            for(let i=0; i<6; i++) {
-                let possible = [];
-                for(let iv=0; iv<=31; iv++) {
-                    let mod = 1.0;
+            for (let i = 0; i < 6; i++) {
+                let foundIV = false;
+                for (let iv = 31; iv >= 0; iv--) {
+                    let modifier = 1.0;
                     if (i > 0) {
-                        const mods = [[],[1,2],[1,5],[1,3],[1,4],[2,1],[],[2,5],[2,3],[2,4],[5,1],[5,2],[],[5,3],[5,4],[3,1],[3,2],[3,5],[],[3,4],[4,1],[4,2],[4,5],[4,3],[]][natIdx];
-                        if (mods.length > 0) {
-                            if (mods[0] === i) mod = 1.1;
-                            if (mods[1] === i) mod = 0.9;
-                        }
+                        const pairs = [[],[1,2],[1,5],[1,3],[1,4],[2,1],[],[2,5],[2,3],[2,4],[5,1],[5,2],[],[5,3],[5,4],[3,1],[3,2],[3,5],[],[3,4],[4,1],[4,2],[4,5],[4,3],[]][natureIndex];
+                        if (pairs[0] === i) modifier = 1.1;
+                        if (pairs[1] === i) modifier = 0.9;
                     }
-                    let calc = i === 0 ? Math.floor((2*bases[i]+iv)*lvl/100)+lvl+10 : Math.floor((Math.floor((2*bases[i]+iv)*lvl/100)+5)*mod);
-                    if(calc === stats[i]) possible.push(iv);
+                    
+                    let calculated;
+                    if (i === 0) {
+                        calculated = Math.floor((2 * baseStats[i] + iv) * level / 100) + level + 10;
+                    } else {
+                        calculated = Math.floor((Math.floor((2 * baseStats[i] + iv) * level / 100) + 5) * modifier);
+                    }
+
+                    if (calculated === currentStats[i]) {
+                        document.getElementById('ivField'+i).value = iv;
+                        foundIV = true;
+                        break;
+                    }
                 }
-                let bestIV = possible.length >= 1 ? possible[0] : 0;
-                results.push(bestIV);
-                document.getElementById('iv'+i).value = bestIV;
             }
-            document.getElementById('ivResult').innerText = "IVs Synced: " + results.join('/');
+            document.getElementById('console').innerText = "Status: IV Extraction Successful. Fields updated.";
         }
 
-        function runTurbo() {
-            isSearching = true; matchesFound = 0;
+        // Search Logic
+        function initiateMarathonSearch() {
+            globalSearchState = true;
             const tid = parseInt(document.getElementById('tid').value);
             const sid = parseInt(document.getElementById('sid').value);
-            const tNat = natures.indexOf(document.getElementById('nat').value);
-            const tIVs = [0,1,2,3,4,5].map(i => parseInt(document.getElementById('iv'+i).value || 0));
-            const minFrame = parseInt(document.getElementById('minFrames').value);
-            const maxFrame = parseInt(document.getElementById('maxFrames').value);
-            
-            const btn = document.getElementById('runBtn');
-            const con = document.getElementById('console');
-            const prog = document.getElementById('progress-bar');
-            
-            btn.disabled = true; btn.innerText = "Scanning Window...";
-            document.getElementById('stopBtn').style.display = 'block';
-            document.getElementById('progress-container').style.display = 'block';
+            const targetNatureIdx = natures.indexOf(document.getElementById('goalNature').value);
+            const targetIVs = [0,1,2,3,4,5].map(i => parseInt(document.getElementById('ivField'+i).value));
+            const min = parseInt(document.getElementById('minAdv').value);
+            const max = parseInt(document.getElementById('maxAdv').value);
 
-            let seed = 0;
-            function slice() {
-                const start = Date.now();
-                while (Date.now() - start < 150) {
-                    if (!isSearching) { finishSearch(); return; }
-                    if (seed > 0xFFFF) { con.innerText = `Scan Complete. Found ${matchesFound} matches in window.`; finishSearch(); return; }
-                    
-                    let r = seed;
-                    // Fast-forward to minFrame
-                    for(let i=0; i < minFrame; i++) { r = next(r); }
+            document.getElementById('btnRun').disabled = true;
+            document.getElementById('btnAbort').style.display = 'block';
+            
+            let currentSeedIter = 0;
 
-                    for (let f = minFrame; f <= maxFrame; f++) {
-                        let v1 = next(r), v2 = next(v1), v3 = next(v2), v4 = next(v3);
+            function processIterationSlice() {
+                const sliceStart = Date.now();
+                // Process for 200ms at a time to keep UI responsive
+                while (Date.now() - sliceStart < 200) {
+                    if (!globalSearchState || currentSeedIter > 0xFFFF) {
+                        finalizeSearchUI();
+                        return;
+                    }
+
+                    let seedPath = currentSeedIter;
+                    // Fast forward to minimum advance
+                    for (let i = 0; i < min; i++) {
+                        seedPath = advanceRng(seedPath);
+                    }
+
+                    // Check frame range
+                    for (let frame = min; frame <= max; frame++) {
+                        let v1 = advanceRng(seedPath);
+                        let v2 = advanceRng(v1);
+                        let v3 = advanceRng(v2);
+                        let v4 = advanceRng(v3);
+                        let v5 = advanceRng(v4);
+
                         let pid = ((v2 >>> 16) << 16) | (v1 >>> 16);
                         
-                        // Force positive evaluation with >>> 0 to avoid undefined nature glitch
-                        if ((pid >>> 0) % 25 === tNat) {
-                            let i1 = v3 >>> 16, i2 = v4 >>> 16;
-                            let curIVs = [i1 & 31, (i1 >> 5) & 31, (i1 >> 10) & 31, (i2 >> 5) & 31, (i2 >> 10) & 31, i2 & 31];
+                        if ((pid >>> 0) % 25 === targetNatureIdx) {
+                            // Method check closures
+                            const validator = (valA, valB, methodId) => {
+                                let ivs = [valA & 31, (valA >> 5) & 31, (valA >> 10) & 31, valB & 31, (valB >> 5) & 31, (valB >> 10) & 31];
+                                if (ivs.every((v, idx) => v === targetIVs[idx])) {
+                                    recordResult(currentSeedIter, frame, methodId, ivs, (tid ^ sid ^ (pid & 0xFFFF) ^ (pid >>> 16)) < 8);
+                                }
+                            };
                             
-                            if (curIVs.every((v, i) => v === tIVs[i])) {
-                                matchesFound++;
-                                let sStr = "0x" + seed.toString(16).toUpperCase();
-                                let isShiny = (tid ^ sid ^ (pid & 0xFFFF) ^ (pid >>> 16)) < 8;
-                                
-                                con.innerHTML = `<strong>Found Match: ${sStr} at Frame ${f}</strong>`;
-                                document.getElementById('activeSeed').value = sStr;
-                                document.getElementById('hAdv').value = f;
-                                
-                                const row = document.getElementById('logBody').insertRow(0);
-                                if(isShiny) row.className = "shiny-row";
-                                row.innerHTML = `<td>${sStr}</td><td>${f}</td><td>${curIVs.join('/')}</td><td>${(pid & 0xFF) < 31 ? '♀' : '♂'}</td><td>${isShiny ? 'YES✨' : 'No'}</td><td><button class="btn-matrix" onclick="showMatrix('${sStr}', ${f})">Matrix</button></td>`;
-                            }
+                            validator(v3 >>> 16, v4 >>> 16, 1);
+                            validator(v3 >>> 16, v5 >>> 16, 2);
+                            validator(v4 >>> 16, v5 >>> 16, 4);
                         }
-                        r = v1;
+                        seedPath = v1;
                     }
-                    seed++;
-                    if(seed % 500 === 0) prog.style.width = ((seed / 65535) * 100) + "%";
+
+                    currentSeedIter++;
+                    if (currentSeedIter % 1000 === 0) {
+                        document.getElementById('console').innerText = `Searching Memory... ${(currentSeedIter/655.35).toFixed(1)}%`;
+                    }
                 }
-                setTimeout(slice, 1);
+                setTimeout(processIterationSlice, 1);
             }
-            slice();
+            processIterationSlice();
         }
 
-        function showMatrix(seedStr, centerFrame) {
-            document.getElementById('matrixSection').style.display = 'block';
-            document.getElementById('matSeed').innerText = seedStr;
-            const body = document.getElementById('matrixBody');
+        function recordResult(seed, adv, meth, ivs, isShiny) {
+            const hex = "0x" + seed.toString(16).toUpperCase().padStart(4, '0');
+            const logBody = document.getElementById('resultsLogBody');
+            const row = logBody.insertRow(0);
+            
+            if (isShiny) row.className = "shiny-row";
+            
+            row.innerHTML = `
+                <td>${hex}</td>
+                <td>${adv}</td>
+                <td><span class="badge m${meth}">M${meth}</span></td>
+                <td>${ivs.join('/')}</td>
+                <td>${isShiny ? 'SHINY ✨' : 'No'}</td>
+                <td><button class="btn-sm btn-green" onclick="transferToExplorer('${hex}')">Map</button></td>
+            `;
+            
+            // Statistics Update
+            if (!sessionStats[hex]) {
+                sessionStats[hex] = { count: 0, totalAdv: 0 };
+            }
+            sessionStats[hex].count++;
+            sessionStats[hex].totalAdv += adv;
+            refreshTrackerTable();
+        }
+
+        function refreshTrackerTable() {
+            const body = document.getElementById('trackerBody');
             body.innerHTML = "";
-
-            const tid = parseInt(document.getElementById('tid').value);
-            const sid = parseInt(document.getElementById('sid').value);
             
-            let startFrame = Math.max(0, centerFrame - 15);
-            let endFrame = centerFrame + 15;
+            const sortedSeeds = Object.keys(sessionStats).sort((a,b) => sessionStats[b].count - sessionStats[a].count);
             
-            let r = parseInt(seedStr, 16);
-            for(let i = 0; i < startFrame; i++) { r = next(r); }
-
-            for(let f = startFrame; f <= endFrame; f++) {
-                let tempR = r;
-                let v1 = next(tempR), v2 = next(v1), v3 = next(v2), v4 = next(v3);
-                let pid = ((v2 >>> 16) << 16) | (v1 >>> 16);
-                let isShiny = (tid ^ sid ^ (pid & 0xFFFF) ^ (pid >>> 16)) < 8;
-                let i1 = v3 >>> 16, i2 = v4 >>> 16;
-                let ivs = [i1 & 31, (i1 >> 5) & 31, (i1 >> 10) & 31, (i2 >> 5) & 31, (i2 >> 10) & 31, i2 & 31];
-                
+            sortedSeeds.forEach(s => {
+                const data = sessionStats[s];
                 const row = body.insertRow();
-                if (f === centerFrame) row.className = "center-row";
-                else if (isShiny) row.className = "shiny-row";
+                if (data.count > 1) row.className = "sticky-seed";
                 
-                // Fixed undefined nature by using (pid >>> 0)
-                row.innerHTML = `<td>${f}</td><td>${natures[(pid >>> 0) % 25]}</td><td>${ivs.join('/')}</td><td>${(pid & 0xFF) < 31 ? '♀' : '♂'}</td><td>${isShiny ? 'YES✨' : 'No'}</td>`;
-                r = next(r);
-            }
-            document.getElementById('matrixSection').scrollIntoView({behavior: 'smooth', block: 'end'});
+                row.innerHTML = `
+                    <td>${s}</td>
+                    <td>${data.count}x</td>
+                    <td>${Math.round(data.totalAdv / data.count)}</td>
+                    <td><button class="btn-sm btn-green" onclick="transferToExplorer('${s}')">Target This</button></td>
+                `;
+            });
         }
 
-        function huntShinies() {
-            const seedStr = document.getElementById('activeSeed').value || "0x0";
-            let r = parseInt(seedStr.startsWith("0x") ? seedStr : "0x"+seedStr, 16);
-            const tid = parseInt(document.getElementById('tid').value);
-            const sid = parseInt(document.getElementById('sid').value);
-            const max = parseInt(document.getElementById('shinyMax').value);
-            const body = document.getElementById('shinyBody');
+        function transferToExplorer(seed) {
+            document.getElementById('mapTargetSeed').value = seed;
+            switchTab({currentTarget: document.querySelectorAll('.tab-btn')[1]}, 'shiny');
+        }
+
+        function finalizeSearchUI() {
+            globalSearchState = false;
+            document.getElementById('btnRun').disabled = false;
+            document.getElementById('btnAbort').style.display = 'none';
+            document.getElementById('console').innerText = "Marathon Sequence Complete.";
+        }
+
+        // Explorer Logic
+        function generateShinyMap() {
+            const tid = 14448;
+            const sid = 14777;
+            const startSeed = parseInt(document.getElementById('mapTargetSeed').value, 16);
+            const depth = parseInt(document.getElementById('mapDepth').value);
+            const body = document.getElementById('mapResultsBody');
+            
             body.innerHTML = "";
-            for(let f=0; f < max; f++) {
-                let tempR = r;
-                let v1 = next(tempR), v2 = next(v1), v3 = next(v2), v4 = next(v3);
+            let current = startSeed;
+
+            for (let f = 0; f <= depth; f++) {
+                let v1 = advanceRng(current);
+                let v2 = advanceRng(v1);
+                let v3 = advanceRng(v2);
+                let v4 = advanceRng(v3);
+                
                 let pid = ((v2 >>> 16) << 16) | (v1 >>> 16);
-                if (((tid ^ sid ^ (pid & 0xFFFF) ^ (pid >>> 16)) < 8)) {
-                    let i1 = v3 >>> 16, i2 = v4 >>> 16;
-                    let ivs = [i1 & 31, (i1 >> 5) & 31, (i1 >> 10) & 31, (i2 >> 5) & 31, (i2 >> 10) & 31, i2 & 31];
-                    const row = body.insertRow();
-                    // Fixed undefined nature here as well
-                    row.innerHTML = `<td>${f}</td><td>${natures[(pid >>> 0) % 25]}</td><td>${ivs.join('/')}</td><td>${(pid & 0xFF) < 31 ? '♀' : '♂'}</td>`;
+                let checkShiny = (tid ^ sid ^ (pid & 0xFFFF) ^ (pid >>> 16)) < 8;
+                
+                if (checkShiny) {
+                    let a = v3 >>> 16;
+                    let b = v4 >>> 16;
+                    let ivStr = `${a&31}/${(a>>5)&31}/${(a>>10)&31}/${b&31}/${(b>>5)&31}/${(b>>10)&31}`;
+                    
+                    const tr = document.createElement('tr');
+                    tr.className = "shiny-row";
+                    tr.innerHTML = `<td>${f}</td><td>${natures[(pid>>>0)%25]}</td><td>${ivStr}</td><td>YES ✨</td>`;
+                    body.appendChild(tr);
                 }
-                r = next(r); 
+                current = v1;
+            }
+            if (body.innerHTML === "") {
+                body.innerHTML = "<tr><td colspan='4' style='text-align:center'>No shinies found in this depth.</td></tr>";
             }
         }
 
-        function finishSearch() { isSearching = false; document.getElementById('runBtn').disabled = false; document.getElementById('runBtn').innerText = "Search All Seeds in Window"; document.getElementById('stopBtn').style.display = 'none'; document.getElementById('progress-container').style.display = 'none'; }
-        function clearSearchLog() { document.getElementById('logBody').innerHTML = ""; document.getElementById('matrixSection').style.display = "none"; }
-        function downloadCSV() {
-            const rows = document.querySelectorAll("#mainLogTable tr");
-            let csv = "data:text/csv;charset=utf-8,";
-            rows.forEach(r => { let d = []; r.querySelectorAll("th, td").forEach(cell => { if(cell.innerText !== 'Matrix') d.push(cell.innerText); }); csv += d.join(",") + "\r\n"; });
-            const link = document.createElement("a"); link.href = encodeURI(csv); link.download = "RNG_Log.csv"; link.click();
+        // Calibration Logic
+        function processCalibration() {
+            const exp = parseInt(document.getElementById('calExp').value);
+            const hit = parseInt(document.getElementById('calHit').value);
+            const frameDiff = hit - exp;
+            const ms = Math.round((frameDiff / 60) * 1000);
+            
+            document.getElementById('latencyResult').innerText = `${ms}ms (${frameDiff > 0 ? '+' : ''}${frameDiff} frames)`;
         }
-
-        function calculateOffset() {
-            const t = parseInt(document.getElementById('tAdv').value);
-            const h = parseInt(document.getElementById('hAdv').value);
-            document.getElementById('calibResult').innerHTML = `Offset: ${t - h}<br>Adjusted Target: ${t + (t - h)}`;
-        }
-
-        [document.getElementById('nat'), document.getElementById('calcNat')].forEach(sel => {
-            natures.forEach(n => { sel.innerHTML += `<option value="${n}">${n}</option>`; });
-            sel.value = "Bold";
-        });
-        const speciesSel = document.getElementById('searchSpecies');
-        Object.keys(pokedex).forEach(p => { speciesSel.innerHTML += `<option value="${p}">${p}</option>`; });
-        syncSpeciesStats();
     </script>
 </body>
 </html>
