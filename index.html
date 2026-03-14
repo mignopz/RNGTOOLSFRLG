@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FRLG Master v45 - The Unabridged Monolith</title>
+    <title>FRLG Master v47 - The Hardened Monolith</title>
     <style>
-        /* STYLING SYSTEM - FULL SPEC 
-           Designed for high-density data viewing during marathon RNG runs.
+        /* STYLING SYSTEM - V47 HARDENED
+           Focus: Absolute containment and high-density data visibility.
         */
         :root { 
             --primary: #1877f2; 
@@ -26,14 +26,17 @@
             --method-4: #673ab7;
         }
 
+        * { box-sizing: border-box; } 
+
         body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; 
             background-color: var(--bg); 
             color: var(--text); 
             margin: 0; 
-            padding: 20px;
+            padding: 10px;
             display: flex;
             justify-content: center;
+            overflow-x: hidden;
         }
 
         .container { 
@@ -41,167 +44,144 @@
             width: 100%;
             max-width: 1100px; 
             border-radius: 12px; 
-            box-shadow: 0 12px 28px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 rgba(0, 0, 0, 0.1); 
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2); 
             overflow: hidden;
-            padding-bottom: 50px;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* Header Navigation */
+        /* Header & Navigation */
         .app-header {
             background: var(--primary);
             color: white;
-            padding: 25px 35px;
+            padding: 20px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
-        .app-header h1 {
-            margin: 0;
-            font-size: 24px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-        }
+        .app-header h1 { margin: 0; font-size: 22px; font-weight: 800; }
 
         .tabs { 
             display: flex; 
             background: #f0f2f5; 
-            padding: 12px 25px; 
-            gap: 12px; 
+            padding: 10px 20px; 
+            gap: 10px; 
             border-bottom: 1px solid var(--border);
+            overflow-x: auto;
         }
 
         .tab-btn { 
-            padding: 14px 28px; 
+            padding: 12px 24px; 
             border: none; 
             background: transparent;
             cursor: pointer; 
             font-weight: 700; 
-            border-radius: 10px; 
+            border-radius: 8px; 
             color: var(--text-secondary);
-            transition: all 0.2s ease;
-            font-size: 15px;
-        }
-
-        .tab-btn:hover {
-            background: rgba(0,0,0,0.06);
+            transition: 0.2s;
+            white-space: nowrap;
         }
 
         .tab-btn.active { 
             background: white; 
             color: var(--primary); 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .tab-content { display: none; padding: 30px; }
-        .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
+        .tab-content { display: none; padding: 25px; width: 100%; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Form Controls */
-        .section { margin-bottom: 35px; }
+        /* Form Layout */
+        .section { 
+            margin-bottom: 25px; 
+            border: 1px solid var(--border);
+            padding: 20px;
+            border-radius: 10px;
+        }
 
         .section-header {
-            font-size: 13px;
+            font-size: 11px;
             text-transform: uppercase;
             font-weight: 900;
             color: var(--text-secondary);
             border-bottom: 2px solid #f0f2f5;
-            padding-bottom: 12px;
-            margin-bottom: 25px;
-            letter-spacing: 1.2px;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
-            align-items: center;
         }
 
-        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; }
-        .grid-6 { display: grid; grid-template-columns: repeat(6, 1fr); gap: 15px; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+        .grid-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 15px;
+            width: 100%;
+        }
 
-        .input-wrapper { display: flex; flex-direction: column; gap: 10px; }
-        .input-wrapper label { font-size: 12px; font-weight: 700; color: var(--text-secondary); }
+        .input-wrapper { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+        .input-wrapper label { font-size: 11px; font-weight: 700; color: var(--text-secondary); }
 
         input, select {
-            padding: 14px;
+            padding: 12px;
             border: 2px solid var(--border);
-            border-radius: 10px;
-            font-size: 16px;
-            background: #ffffff;
-            transition: all 0.2s;
-            box-sizing: border-box;
+            border-radius: 8px;
+            font-size: 14px;
+            width: 100%;
+            background: #fff;
         }
 
-        input:focus {
-            border-color: var(--primary);
-            outline: none;
-            box-shadow: 0 0 0 4px rgba(24, 119, 242, 0.1);
-        }
+        input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(24,119,242,0.15); }
 
-        /* Buttons */
         .btn {
-            padding: 16px 30px;
+            padding: 15px 25px;
             border: none;
-            border-radius: 10px;
+            border-radius: 8px;
             font-weight: 800;
             cursor: pointer;
             text-transform: uppercase;
-            font-size: 14px;
-            transition: all 0.2s;
+            font-size: 13px;
+            transition: 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
         }
 
-        .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 0 #1156b3; }
-        .btn-primary:active { transform: translateY(3px); box-shadow: 0 1px 0 #1156b3; }
-        .btn-danger { background: var(--accent); color: white; display: none; box-shadow: 0 4px 0 #a01a43; }
-        .btn-success { background: var(--success); color: white; box-shadow: 0 4px 0 #1e7e34; }
+        .btn-primary { background: var(--primary); color: white; width: 100%; }
+        .btn-danger { background: var(--accent); color: white; display: none; width: 100%; margin-top: 10px; }
+        .btn-success { background: var(--success); color: white; }
 
-        /* Console & Tables */
         #status-bar {
             background: var(--dark-bg);
             color: #00ff41;
-            padding: 18px 25px;
-            border-radius: 10px;
-            font-family: 'Cascadia Code', 'Consolas', monospace;
-            font-size: 14px;
-            margin: 25px 0;
-            border-left: 6px solid var(--success);
-            box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Consolas', monospace;
+            font-size: 13px;
+            margin: 20px 0;
+            border-left: 5px solid var(--success);
+            word-break: break-all;
         }
 
+        /* Table Styles */
         .table-container {
             overflow-x: auto;
             border: 1px solid var(--border);
-            border-radius: 12px;
-            background: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-radius: 8px;
+            margin-top: 10px;
         }
 
-        table { width: 100%; border-collapse: collapse; font-size: 14px; }
-        th {
-            background: #f8f9fa;
-            text-align: left;
-            padding: 18px;
-            font-weight: 800;
-            color: var(--text-secondary);
-            border-bottom: 2px solid var(--border);
-        }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 700px; }
+        th { background: #f8f9fa; padding: 15px; text-align: left; border-bottom: 2px solid var(--border); }
+        td { padding: 12px 15px; border-bottom: 1px solid #f0f2f5; font-family: 'Roboto Mono', monospace; }
 
-        td { padding: 16px; border-bottom: 1px solid #f0f2f5; font-family: 'Roboto Mono', monospace; }
-
-        .shiny-row { background: #fffde7 !important; font-weight: bold; color: #856404; border-left: 5px solid var(--shiny); }
-        .repeat-seed { background: #e8f5e9 !important; border-left: 5px solid var(--success); font-weight: bold; }
-
-        .badge {
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 11px;
-            color: white;
-            font-weight: 900;
-        }
+        .shiny-row { background: #fffde7 !important; border-left: 5px solid var(--shiny); }
+        .badge { padding: 4px 8px; border-radius: 4px; color: white; font-weight: 900; font-size: 10px; }
         .m1 { background: var(--method-1); }
         .m2 { background: var(--method-2); }
         .m4 { background: var(--method-4); }
@@ -211,30 +191,30 @@
 <body>
     <div class="container">
         <header class="app-header">
-            <h1>FRLG Master v45 — The Monolith</h1>
-            <div id="runtime-clock" style="font-family: monospace; font-size: 14px; opacity: 0.8;">SESSION READY</div>
+            <h1>FRLG Master RNG v47</h1>
+            <div id="session-tag" style="font-size: 12px; opacity: 0.8;">POKEFINDER METHOD-1 SYNC</div>
         </header>
 
         <nav class="tabs">
-            <button class="tab-btn active" onclick="openTab(event, 'marathon')">Deep Marathon Scan</button>
-            <button class="tab-btn" onclick="openTab(event, 'explorer')">Shiny Seed Mapper</button>
-            <button class="tab-btn" onclick="openTab(event, 'sync')">Calibration Engine</button>
+            <button class="tab-btn active" onclick="openTab(event, 'marathon')">Global Marathon</button>
+            <button class="tab-btn" onclick="openTab(event, 'explorer')">Seed Explorer</button>
+            <button class="tab-btn" onclick="openTab(event, 'sync')">Calibration</button>
         </nav>
 
         <div id="marathon" class="tab-content active">
             <div class="section">
-                <div class="section-header">1. Trainer & Target Profile</div>
-                <div class="grid-3">
+                <div class="section-header">1. Trainer & Target Profiles</div>
+                <div class="grid-inputs">
                     <div class="input-wrapper">
-                        <label>Trainer ID (TID)</label>
-                        <input type="number" id="tid" value="14448">
+                        <label>TID</label>
+                        <input type="number" id="tid" value="39454">
                     </div>
                     <div class="input-wrapper">
-                        <label>Secret ID (SID)</label>
-                        <input type="number" id="sid" value="14777">
+                        <label>SID</label>
+                        <input type="number" id="sid" value="14448">
                     </div>
                     <div class="input-wrapper">
-                        <label>Goal Nature</label>
+                        <label>Target Nature</label>
                         <select id="targetNature"></select>
                     </div>
                 </div>
@@ -242,68 +222,68 @@
 
             <div class="section">
                 <div class="section-header">
-                    <span>2. Level 100 IV Decoder</span>
-                    <button class="btn-success" style="padding: 6px 12px; font-size: 11px; box-shadow: none;" onclick="calculateIVsFromStats()">Sync Stats to IVs</button>
+                    <span>2. Level 100 Stat Reference</span>
+                    <button class="btn-success" style="padding: 4px 12px; font-size: 10px;" onclick="calculateIVsFromStats()">Auto-Extract IVs</button>
                 </div>
-                <div class="grid-2" style="margin-bottom: 20px;">
+                <div class="grid-inputs" style="margin-bottom: 15px;">
                     <div class="input-wrapper">
-                        <label>Species Reference</label>
+                        <label>Species</label>
                         <select id="speciesSelect"></select>
                     </div>
                     <div class="input-wrapper">
-                        <label>Actual Nature (for stat calc)</label>
+                        <label>Actual Nature</label>
                         <select id="actualNature"></select>
                     </div>
                 </div>
-                <div class="grid-6">
-                    <div class="input-wrapper"><label>HP Stat</label><input type="number" id="stat-0"></div>
-                    <div class="input-wrapper"><label>Atk Stat</label><input type="number" id="stat-1"></div>
-                    <div class="input-wrapper"><label>Def Stat</label><input type="number" id="stat-2"></div>
-                    <div class="input-wrapper"><label>SpA Stat</label><input type="number" id="stat-3"></div>
-                    <div class="input-wrapper"><label>SpD Stat</label><input type="number" id="stat-4"></div>
-                    <div class="input-wrapper"><label>Spe Stat</label><input type="number" id="stat-5"></div>
+                <div class="grid-inputs">
+                    <div class="input-wrapper"><label>HP (248)</label><input type="number" id="stat-0" value="248"></div>
+                    <div class="input-wrapper"><label>Atk (139)</label><input type="number" id="stat-1" value="139"></div>
+                    <div class="input-wrapper"><label>Def (137)</label><input type="number" id="stat-2" value="137"></div>
+                    <div class="input-wrapper"><label>SpA (110)</label><input type="number" id="stat-3" value="110"></div>
+                    <div class="input-wrapper"><label>SpD (143)</label><input type="number" id="stat-4" value="143"></div>
+                    <div class="input-wrapper"><label>Spe (117)</label><input type="number" id="stat-5" value="117"></div>
                 </div>
             </div>
 
-            <div class="section" style="border-top: 4px solid var(--primary); padding-top: 30px;">
-                <div class="section-header">3. RNG Marathon Search Parameters</div>
-                <div class="grid-6" style="margin-bottom: 25px;">
-                    <div class="input-wrapper"><label>HP IV</label><input type="number" id="iv-0"></div>
-                    <div class="input-wrapper"><label>Atk IV</label><input type="number" id="iv-1"></div>
-                    <div class="input-wrapper"><label>Def IV</label><input type="number" id="iv-2"></div>
-                    <div class="input-wrapper"><label>SpA IV</label><input type="number" id="iv-3"></div>
-                    <div class="input-wrapper"><label>SpD IV</label><input type="number" id="iv-4"></div>
-                    <div class="input-wrapper"><label>Spe IV</label><input type="number" id="iv-5"></div>
+            <div class="section" style="border-top: 4px solid var(--primary);">
+                <div class="section-header">3. RNG Global Search Parameters</div>
+                <div class="grid-inputs" style="margin-bottom: 15px;">
+                    <div class="input-wrapper"><label>HP IV</label><input type="number" id="iv-0" value="28"></div>
+                    <div class="input-wrapper"><label>Atk IV</label><input type="number" id="iv-1" value="24"></div>
+                    <div class="input-wrapper"><label>Def IV</label><input type="number" id="iv-2" value="20"></div>
+                    <div class="input-wrapper"><label>SpA IV</label><input type="number" id="iv-3" value="15"></div>
+                    <div class="input-wrapper"><label>SpD IV</label><input type="number" id="iv-4" value="8"></div>
+                    <div class="input-wrapper"><label>Spe IV</label><input type="number" id="iv-5" value="15"></div>
                 </div>
-                <div class="grid-2">
-                    <div class="input-wrapper"><label>Starting Advance</label><input type="number" id="minAdv" value="1000"></div>
-                    <div class="input-wrapper"><label>End Advance (Max)</label><input type="number" id="maxAdv" value="8000"></div>
+                <div class="grid-inputs">
+                    <div class="input-wrapper"><label>Min Advance</label><input type="number" id="minAdv" value="1000"></div>
+                    <div class="input-wrapper"><label>Max Advance</label><input type="number" id="maxAdv" value="15000"></div>
                 </div>
-                <button class="btn btn-primary" id="startBtn" onclick="runMarathon()" style="margin-top: 30px; width: 100%;">Execute Global Search</button>
-                <button class="btn btn-danger" id="stopBtn" onclick="stopSearch()" style="margin-top: 15px; width: 100%;">Kill Process</button>
+                <div style="margin-top: 15px; font-size: 13px; display: flex; align-items: center; gap: 8px;">
+                    <input type="checkbox" id="fuzzySearch" style="width: 18px; height: 18px;"> 
+                    <label for="fuzzySearch" style="font-weight: 700;">Enable Fuzzy Logic (Matches within ±1 IV)</label>
+                </div>
+                <button class="btn btn-primary" id="startBtn" onclick="runMarathon()" style="margin-top: 20px;">Execute Seed Exhaustion Scan</button>
+                <button class="btn btn-danger" id="stopBtn" onclick="stopSearch()">Force Abort</button>
             </div>
 
-            <div id="status-bar">Awaiting Search Initialization...</div>
+            <div id="status-bar">System Status: Ready. Awaiting global search parameters.</div>
 
             <div class="section">
-                <div class="section-header">Global Seed Consistency Matrix</div>
+                <div class="section-header">Seed Consistency Table</div>
                 <div class="table-container">
                     <table>
-                        <thead>
-                            <tr><th>Initial Seed</th><th>Hit Count</th><th>Avg Advance</th><th>Action</th></tr>
-                        </thead>
+                        <thead><tr><th>Initial Seed</th><th>Hit Count</th><th>Avg Advance</th><th>Link</th></tr></thead>
                         <tbody id="consistencyBody"></tbody>
                     </table>
                 </div>
             </div>
 
             <div class="section">
-                <div class="section-header">Discovery Log</div>
+                <div class="section-header">Full Discovery Log</div>
                 <div class="table-container">
                     <table>
-                        <thead>
-                            <tr><th>Initial Seed</th><th>Advance</th><th>Method</th><th>IV Spread</th><th>Shiny</th><th>Link</th></tr>
-                        </thead>
+                        <thead><tr><th>Seed</th><th>Advance</th><th>Method</th><th>IVs</th><th>Shiny</th></tr></thead>
                         <tbody id="marathonResults"></tbody>
                     </table>
                 </div>
@@ -312,16 +292,16 @@
 
         <div id="explorer" class="tab-content">
             <div class="section">
-                <div class="section-header">High-Depth Seed Explorer</div>
-                <div class="grid-2">
-                    <div class="input-wrapper"><label>Target Seed (Hex)</label><input type="text" id="targetHex" placeholder="0x0BF6"></div>
-                    <div class="input-wrapper"><label>Scan Depth (Total Frames)</label><input type="number" id="depth" value="35000"></div>
+                <div class="section-header">Seed Mapping Tool</div>
+                <div class="grid-inputs">
+                    <div class="input-wrapper"><label>Seed (Hex)</label><input type="text" id="targetHex" placeholder="0x0000"></div>
+                    <div class="input-wrapper"><label>Depth</label><input type="number" id="depth" value="50000"></div>
                 </div>
-                <button class="btn btn-primary" onclick="exploreSeed()" style="margin-top:25px; width: 100%;">Generate Result Map</button>
+                <button class="btn btn-primary" onclick="exploreSeed()" style="margin-top: 20px;">Generate Map</button>
             </div>
             <div class="table-container">
                 <table>
-                    <thead><tr><th>Advance</th><th>Nature</th><th>IV Spread</th><th>Shiny Status</th></tr></thead>
+                    <thead><tr><th>Adv</th><th>Nature</th><th>IV Spread</th><th>Shiny</th></tr></thead>
                     <tbody id="explorerBody"></tbody>
                 </table>
             </div>
@@ -329,112 +309,89 @@
 
         <div id="sync" class="tab-content">
             <div class="section">
-                <div class="section-header">Hardware Latency Measurement</div>
-                <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 25px;">Input your target advance and the actual frame you hit to calculate your unique hardware delay (latency).</p>
-                <div class="grid-2">
-                    <div class="input-wrapper"><label>Intended Target Frame</label><input type="number" id="targetF" value="2000"></div>
-                    <div class="input-wrapper"><label>Observed Hit Frame</label><input type="number" id="actualF"></div>
+                <div class="section-header">Latency Calibration</div>
+                <div class="grid-inputs">
+                    <div class="input-wrapper"><label>Target Frame</label><input type="number" id="targetF" value="2000"></div>
+                    <div class="input-wrapper"><label>Hit Frame</label><input type="number" id="actualF"></div>
                 </div>
-                <div id="syncOutput" style="font-size: 52px; text-align: center; padding: 60px; font-weight: 900; color: var(--primary);">0ms</div>
-                <button class="btn btn-primary" onclick="calculateSync()" style="width:100%">Calculate Latency Offset</button>
+                <div id="syncOutput" style="font-size: 48px; text-align: center; padding: 50px; font-weight: 900; color: var(--primary);">0ms</div>
+                <button class="btn btn-primary" onclick="calculateSync()">Analyze Offset</button>
             </div>
         </div>
     </div>
 
     <script>
-        /* CORE ENGINE - FRLG Master v45
-           Pokefinder-Aligned Logic for Stationary/Gift Pokemon.
+        /* CORE ENGINE - VERSION 47
+           Restoring full functionality with logic fixes for Eevee/Relaxed/Method 1.
         */
         const NATURES = ["Hardy", "Lonely", "Brave", "Adamant", "Naughty", "Bold", "Docile", "Relaxed", "Impish", "Lax", "Timid", "Hasty", "Serious", "Jolly", "Naive", "Modest", "Mild", "Quiet", "Bashful", "Rash", "Calm", "Gentle", "Sassy", "Careful", "Quirky"];
         
-        const SPECIES_DATABASE = {
+        const SPECIES_DB = {
             "Eevee": [55, 55, 50, 45, 65, 55],
             "Mewtwo": [106, 110, 90, 154, 90, 130],
             "Zapdos": [90, 90, 85, 125, 90, 100],
             "Articuno": [90, 85, 100, 95, 125, 85],
             "Moltres": [90, 100, 90, 125, 85, 90],
-            "Snorlax": [160, 110, 65, 65, 110, 30],
-            "Lapras": [130, 85, 80, 85, 95, 60],
-            "Aerodactyl": [80, 105, 65, 60, 75, 130],
-            "Kabutops": [60, 115, 105, 65, 70, 80],
-            "Omastar": [70, 60, 125, 115, 70, 55],
-            "Bulbasaur": [45, 49, 49, 65, 65, 45],
-            "Charmander": [39, 52, 43, 60, 50, 65],
-            "Squirtle": [44, 48, 65, 50, 64, 43],
-            "Hitmonlee": [50, 120, 53, 35, 110, 87],
-            "Hitmonchan": [50, 105, 79, 35, 110, 76]
+            "Snorlax": [160, 110, 65, 65, 110, 30]
         };
 
         let isSearching = false;
-        let marathonConsistency = {};
+        let consistency = {};
 
-        // INITIALIZATION
         window.onload = () => {
             const speciesSel = document.getElementById('speciesSelect');
             const targetNat = document.getElementById('targetNature');
             const actualNat = document.getElementById('actualNature');
 
-            Object.keys(SPECIES_DATABASE).sort().forEach(s => {
-                speciesSel.options.add(new Option(s, s));
-            });
-
+            Object.keys(SPECIES_DB).sort().forEach(s => speciesSel.options.add(new Option(s, s)));
             NATURES.forEach(n => {
                 targetNat.options.add(new Option(n, n));
                 actualNat.options.add(new Option(n, n));
             });
             
-            // Default species for Eevee
-            speciesSel.value = "Eevee";
+            targetNat.value = "Relaxed";
+            actualNat.value = "Relaxed";
         };
 
-        function openTab(evt, tabName) {
+        function openTab(evt, name) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(tabName).classList.add('active');
+            document.getElementById(name).classList.add('active');
             evt.currentTarget.classList.add('active');
         }
 
-        /* STATS TO IVS LOGIC */
+        /* IV DECODER LOGIC */
         function calculateIVsFromStats() {
             const species = document.getElementById('speciesSelect').value;
-            const level = 100;
             const natureIdx = NATURES.indexOf(document.getElementById('actualNature').value);
-            const base = SPECIES_DATABASE[species];
+            const base = SPECIES_DB[species];
             const stats = [0,1,2,3,4,5].map(i => parseInt(document.getElementById('stat-'+i).value || 0));
 
-            const NATURE_MODS = [
+            const mods = [
                 [],[1,2],[1,5],[1,3],[1,4], [2,1],[],[2,5],[2,3],[2,4], [5,1],[5,2],[],[5,3],[5,4], [3,1],[3,2],[3,5],[],[3,4], [4,1],[4,2],[4,5],[4,3],[]
             ];
 
             for(let i=0; i<6; i++) {
-                let matched = false;
                 for(let iv=31; iv>=0; iv--) {
-                    let mod = 1.0;
+                    let m = 1.0;
                     if(i > 0) {
-                        const pairs = NATURE_MODS[natureIdx];
-                        if(pairs[0] === i) mod = 1.1;
-                        if(pairs[1] === i) mod = 0.9;
+                        const pair = mods[natureIdx];
+                        if(pair[0] === i) m = 1.1;
+                        if(pair[1] === i) m = 0.9;
                     }
-                    
-                    let calc;
-                    if(i === 0) {
-                        calc = Math.floor((2 * base[i] + iv) * level / 100) + level + 10;
-                    } else {
-                        calc = Math.floor((Math.floor((2 * base[i] + iv) * level / 100) + 5) * mod);
-                    }
-
-                    if(calc === stats[i]) {
+                    // FRLG Level 100 Formula
+                    let c = (i === 0) ? Math.floor((2 * base[i] + iv) + 110) : Math.floor((Math.floor(2 * base[i] + iv + 5)) * m);
+                    if(c === stats[i]) {
                         document.getElementById('iv-'+i).value = iv;
-                        matched = true;
                         break;
                     }
                 }
             }
-            logUpdate("Extraction successful. Target IVs updated based on stats.");
+            log("IV extraction synchronized to Section 3.");
         }
 
-        /* RNG CORE LOGIC */
-        const rollRng = (seed) => (Math.imul(seed, 0x41C64E6D) + 0x6073) >>> 0;
+        /* RNG KERNEL */
+        const next = (s) => (Math.imul(s, 0x41C64E6D) + 0x6073) >>> 0;
 
         function runMarathon() {
             isSearching = true;
@@ -443,166 +400,149 @@
             
             const tid = parseInt(document.getElementById('tid').value);
             const sid = parseInt(document.getElementById('sid').value);
-            const targetNatIdx = NATURES.indexOf(document.getElementById('targetNature').value);
+            const targetNat = NATURES.indexOf(document.getElementById('targetNature').value);
             const targetIVs = [0,1,2,3,4,5].map(i => parseInt(document.getElementById('iv-'+i).value));
-            const minAdv = parseInt(document.getElementById('minAdv').value);
-            const maxAdv = parseInt(document.getElementById('maxAdv').value);
+            const minA = parseInt(document.getElementById('minAdv').value);
+            const maxA = parseInt(document.getElementById('maxAdv').value);
+            const fuzzy = document.getElementById('fuzzySearch').checked;
 
-            let currentSeedIter = 0;
+            let seed = 0;
 
-            function processSlice() {
+            function process() {
                 const startTime = Date.now();
-                // Process seeds in 150ms slices to keep browser responsive
-                while(Date.now() - startTime < 150) {
-                    if(!isSearching || currentSeedIter > 0xFFFF) {
-                        finalizeSearch();
+                while(Date.now() - startTime < 120) {
+                    if(!isSearching || seed > 0xFFFF) {
+                        finalize();
                         return;
                     }
 
-                    // POKEFINDER ALIGNMENT: 
-                    // Start from initial seed and roll to minAdv
-                    let currentState = currentSeedIter;
-                    for(let i=0; i < minAdv; i++) currentState = rollRng(currentState);
+                    let state = seed;
+                    for(let i=0; i < minA; i++) state = next(state);
 
-                    // Scan the frame window
-                    for(let frame = minAdv; frame <= maxAdv; frame++) {
-                        let v1 = currentState;           // Advance N
-                        let v2 = rollRng(v1);             // Advance N+1
-                        let v3 = rollRng(v2);             // Advance N+2
-                        let v4 = rollRng(v3);             // Advance N+3
-                        let v5 = rollRng(v4);             // Advance N+4
+                    for(let f = minA; f <= maxA; f++) {
+                        let v1 = state;
+                        let v2 = next(v1);
+                        let v3 = next(v2);
+                        let v4 = next(v3);
+                        let v5 = next(v4);
 
-                        // POKEFINDER PID: Lower 16 bits of State N and State N+1
+                        // Pokefinder PID Alignment
                         let pid = ((v2 >>> 16) << 16) | (v1 >>> 16);
                         
-                        if((pid >>> 0) % 25 === targetNatIdx) {
-                            // Method 1: IVs from N+2, N+3
-                            validateAndLog(currentSeedIter, frame, 1, v3 >>> 16, v4 >>> 16, targetIVs, tid, sid, pid);
-                            // Method 2: IVs from N+2, N+4
-                            validateAndLog(currentSeedIter, frame, 2, v3 >>> 16, v5 >>> 16, targetIVs, tid, sid, pid);
-                            // Method 4: IVs from N+3, N+4
-                            validateAndLog(currentSeedIter, frame, 4, v4 >>> 16, v5 >>> 16, targetIVs, tid, sid, pid);
+                        if((pid >>> 0) % 25 === targetNat) {
+                            validate(seed, f, 1, v3 >>> 16, v4 >>> 16, targetIVs, tid, sid, pid, fuzzy);
+                            validate(seed, f, 2, v3 >>> 16, v5 >>> 16, targetIVs, tid, sid, pid, fuzzy);
+                            validate(seed, f, 4, v4 >>> 16, v5 >>> 16, targetIVs, tid, sid, pid, fuzzy);
                         }
-                        currentState = v2; // Iterate loop to Advance N+1
+                        state = v2;
                     }
-
-                    currentSeedIter++;
-                    if(currentSeedIter % 1000 === 0) {
-                        logUpdate(`Searching... ${(currentSeedIter/655.35).toFixed(1)}% of Seed Space Exhausted.`);
-                    }
+                    seed++;
+                    if(seed % 1000 === 0) log(`Global Progress: ${(seed/655.35).toFixed(1)}%`);
                 }
-                setTimeout(processSlice, 0);
+                setTimeout(process, 0);
             }
-            processSlice();
+            process();
         }
 
-        function validateAndLog(seed, frame, method, rawA, rawB, target, tid, sid, pid) {
-            let ivs = [rawA & 31, (rawA >> 5) & 31, (rawA >> 10) & 31, rawB & 31, (rawB >> 5) & 31, (rawB >> 10) & 31];
+        function validate(seed, adv, meth, valA, valB, target, tid, sid, pid, fuzzy) {
+            let ivs = [valA & 31, (valA >> 5) & 31, (valA >> 10) & 31, valB & 31, (valB >> 5) & 31, (valB >> 10) & 31];
             
-            // Check for strict match
-            if(ivs.every((v, i) => v === target[i])) {
-                let isShiny = (tid ^ sid ^ (pid & 0xFFFF) ^ (pid >>> 16)) < 8;
-                appendDiscovery(seed, frame, method, ivs, isShiny);
+            let isMatch = ivs.every((v, i) => {
+                if(isNaN(target[i])) return true;
+                return fuzzy ? Math.abs(v - target[i]) <= 1 : v === target[i];
+            });
+
+            if(isMatch) {
+                let shiny = (tid ^ sid ^ (pid & 0xFFFF) ^ (pid >>> 16)) < 8;
+                recordDiscovery(seed, adv, meth, ivs, shiny);
             }
         }
 
-        function appendDiscovery(seed, adv, meth, ivs, shiny) {
+        function recordDiscovery(seed, adv, meth, ivs, shiny) {
             const hex = "0x" + seed.toString(16).toUpperCase().padStart(4, '0');
-            const logBody = document.getElementById('marathonResults');
-            const row = logBody.insertRow(0);
+            const tableBody = document.getElementById('marathonResults');
+            const row = tableBody.insertRow(0);
             if(shiny) row.className = "shiny-row";
-
             row.innerHTML = `
                 <td>${hex}</td>
                 <td>${adv}</td>
                 <td><span class="badge m${meth}">M${meth}</span></td>
                 <td>${ivs.join('/')}</td>
-                <td>${shiny ? '✨ SHINY' : 'No'}</td>
-                <td><button class="btn-success" style="padding:4px 10px; font-size:10px;" onclick="syncToExplorer('${hex}')">FOCUS</button></td>
+                <td>${shiny?'YES ✨':'No'}</td>
             `;
 
-            // Matrix Tracking
-            if(!marathonConsistency[hex]) marathonConsistency[hex] = { hits: 0, totalAdv: 0 };
-            marathonConsistency[hex].hits++;
-            marathonConsistency[hex].totalAdv += adv;
-            refreshMatrix();
+            if(!consistency[hex]) consistency[hex] = { count: 0, sum: 0 };
+            consistency[hex].count++;
+            consistency[hex].sum += adv;
+            updateConsistencyTable();
         }
 
-        function refreshMatrix() {
-            const matrixBody = document.getElementById('consistencyBody');
-            matrixBody.innerHTML = "";
-            const sortedSeeds = Object.keys(marathonConsistency).sort((a,b) => marathonConsistency[b].hits - marathonConsistency[a].hits);
-
-            sortedSeeds.forEach(s => {
-                const row = matrixBody.insertRow();
-                if(marathonConsistency[s].hits > 1) row.className = "repeat-seed";
+        function updateConsistencyTable() {
+            const tbody = document.getElementById('consistencyBody');
+            tbody.innerHTML = "";
+            Object.keys(consistency).sort((a,b) => consistency[b].count - consistency[a].count).forEach(s => {
+                const row = tbody.insertRow();
                 row.innerHTML = `
                     <td>${s}</td>
-                    <td>${marathonConsistency[s].hits} Hits</td>
-                    <td>${Math.round(marathonConsistency[s].totalAdv / marathonConsistency[s].hits)}</td>
-                    <td><button class="btn-primary" style="padding:4px 8px; font-size:10px;" onclick="syncToExplorer('${s}')">SYNC</button></td>
+                    <td>${consistency[s].count} Matches</td>
+                    <td>${Math.round(consistency[s].sum / consistency[s].count)}</td>
+                    <td><button onclick="jumpToExplorer('${s}')" class="btn-success" style="padding:4px 8px; font-size:10px;">MAP</button></td>
                 `;
             });
         }
 
-        function logUpdate(msg) { document.getElementById('status-bar').innerText = `System Status: ${msg}`; }
+        function log(msg) { document.getElementById('status-bar').innerText = msg; }
         
-        function stopSearch() { isSearching = false; }
-
-        function finalizeSearch() {
+        function finalize() {
             isSearching = false;
             document.getElementById('startBtn').disabled = false;
             document.getElementById('stopBtn').style.display = 'none';
-            logUpdate("Full Marathon Scan Concluded.");
+            log("Scan finalized.");
         }
 
-        function syncToExplorer(hex) {
+        function stopSearch() { isSearching = false; }
+
+        function jumpToExplorer(hex) {
             document.getElementById('targetHex').value = hex;
             openTab({currentTarget: document.querySelectorAll('.tab-btn')[1]}, 'explorer');
         }
 
-        /* EXPLORER LOGIC */
         function exploreSeed() {
-            const seed = parseInt(document.getElementById('targetHex').value, 16);
+            const sVal = document.getElementById('targetHex').value;
+            const seed = parseInt(sVal, 16);
             const depth = parseInt(document.getElementById('depth').value);
             const tid = parseInt(document.getElementById('tid').value);
             const sid = parseInt(document.getElementById('sid').value);
-            const explorerBody = document.getElementById('explorerBody');
+            const body = document.getElementById('explorerBody');
             
-            explorerBody.innerHTML = "";
+            body.innerHTML = "";
             let state = seed;
-
-            for(let f=0; f<=depth; f++) {
+            for(let i=0; i<=depth; i++) {
                 let v1 = state;
-                let v2 = rollRng(v1);
-                let v3 = rollRng(v2);
-                let v4 = rollRng(v3);
-
+                let v2 = next(v1);
+                let v3 = next(v2);
+                let v4 = next(v3);
                 let pid = ((v2 >>> 16) << 16) | (v1 >>> 16);
-                let isShiny = (tid ^ sid ^ (pid & 0xFFFF) ^ (pid >>> 16)) < 8;
-
-                if(isShiny) {
-                    let iv1 = v3 >>> 16;
-                    let iv2 = v4 >>> 16;
-                    let ivString = `${iv1&31}/${(iv1>>5)&31}/${(iv1>>10)&31}/${iv2&31}/${(iv2>>5)&31}/${(iv2>>10)&31}`;
-                    const row = explorerBody.insertRow();
+                let shiny = (tid ^ sid ^ (pid & 0xFFFF) ^ (pid >>> 16)) < 8;
+                if(shiny) {
+                    let ivA = v3 >>> 16; let ivB = v4 >>> 16;
+                    let spread = `${ivA&31}/${ivA>>5&31}/${ivA>>10&31}/${ivB&31}/${ivB>>5&31}/${ivB>>10&31}`;
+                    const row = body.insertRow();
                     row.className = "shiny-row";
-                    row.innerHTML = `<td>${f}</td><td>${NATURES[pid%25]}</td><td>${ivString}</td><td>SHINY! ✨</td>`;
+                    row.innerHTML = `<td>${i}</td><td>${NATURES[pid%25]}</td><td>${spread}</td><td>✨</td>`;
                 }
                 state = v2;
             }
-            if(explorerBody.innerHTML === "") explorerBody.innerHTML = "<tr><td colspan='4'>No shiny results found for this seed within the depth limit.</td></tr>";
         }
 
-        /* CALIBRATION LOGIC */
         function calculateSync() {
-            const target = parseInt(document.getElementById('targetF').value);
-            const actual = parseInt(document.getElementById('actualF').value);
-            const frameDiff = actual - target;
-            const msDiff = Math.round((frameDiff / 60) * 1000);
-            const display = document.getElementById('syncOutput');
-            display.innerText = `${msDiff}ms (${frameDiff > 0 ? '+' : ''}${frameDiff} f)`;
-            display.style.color = Math.abs(frameDiff) < 4 ? "var(--success)" : "var(--accent)";
+            const t = parseInt(document.getElementById('targetF').value);
+            const a = parseInt(document.getElementById('actualF').value);
+            const diff = a - t;
+            const ms = Math.round((diff / 60) * 1000);
+            const out = document.getElementById('syncOutput');
+            out.innerText = `${ms}ms`;
+            out.style.color = Math.abs(diff) < 3 ? "var(--success)" : "var(--accent)";
         }
     </script>
 </body>
