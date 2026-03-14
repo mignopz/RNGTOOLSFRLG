@@ -348,6 +348,16 @@
                 </div>
                 <button class="btn btn-primary" onclick="exploreSeed()" style="margin-top: 20px;">Map Advancements</button>
             </div>
+            <div class="section" style="margin-top: 20px;">
+                <div class="section-header">Verify seed @ advance (PokeFinder sync)</div>
+                <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;">Check what nature/IVs we compute for a given seed and advance (e.g. seed 0xBF6, advance 2055).</p>
+                <div class="grid-inputs">
+                    <div class="input-wrapper"><label>Seed (Hex)</label><input type="text" id="verifySeed" placeholder="0xBF6"></div>
+                    <div class="input-wrapper"><label>Advance</label><input type="number" id="verifyAdv" value="2055"></div>
+                </div>
+                <button class="btn btn-primary" onclick="verifySeedAdvance()" style="margin-top: 10px;">Verify</button>
+                <div id="verifyOutput" style="margin-top: 15px; font-family: Consolas, monospace; font-size: 14px; padding: 12px; background: #f8f9fa; border-radius: 8px;"></div>
+            </div>
             <div class="table-container">
                 <table>
                     <thead><tr><th>Advance</th><th>Nature</th><th>IV Spread</th><th>Shiny</th></tr></thead>
@@ -545,24 +555,19 @@
                         return;
                     }
 
-                    let state = seed;
-                    for(let i=0; i < minA; i++) state = next(state);
-
-                    for(let f = minA; f <= maxA; f++) {
-                        let v1 = state;
-                        let v2 = next(v1);
-                        let v3 = next(v2);
-                        let v4 = next(v3);
-                        let v5 = next(v4);
-
-                        let pid = ((v2 >>> 16) << 16) | (v1 >>> 16);
-                        
+                    // Match calculadora seed.html: advance state at start of each frame; advance N = state after N advances
+                    let r = seed;
+                    for(let frame = 0; frame <= maxA; frame++) {
+                        r = next(r);
+                        if(frame + 1 < minA) continue;
+                        let adv = frame + 1;
+                        let v2 = next(r), v3 = next(v2), v4 = next(v3), v5 = next(v4), v6 = next(v5);
+                        let pid = ((v3 >>> 16) << 16) | (v2 >>> 16);
                         if((pid >>> 0) % 25 === targetNat) {
-                            check(seed, f, 1, v3 >>> 16, v4 >>> 16, targetIVs, tid, sid, pid);
-                            check(seed, f, 2, v4 >>> 16, v5 >>> 16, targetIVs, tid, sid, pid);
-                            check(seed, f, 4, v3 >>> 16, v5 >>> 16, targetIVs, tid, sid, pid);
+                            check(seed, adv, 1, v4 >>> 16, v5 >>> 16, targetIVs, tid, sid, pid);
+                            check(seed, adv, 2, v5 >>> 16, v6 >>> 16, targetIVs, tid, sid, pid);
+                            check(seed, adv, 4, v4 >>> 16, v6 >>> 16, targetIVs, tid, sid, pid);
                         }
-                        state = v2;
                     }
                     seed++;
                     if(seed % 500 === 0) log(`Global Progress: ${(seed/655.35).toFixed(1)}%`);
@@ -615,11 +620,11 @@
             body.innerHTML = "";
             let s = seed;
             for(let i=0; i<=d; i++) {
-                let v1 = s; let v2 = next(v1); let v3 = next(v2); let v4 = next(v3);
-                let pid = ((v2 >>> 16) << 16) | (v1 >>> 16);
+                let v1 = s; let v2 = next(v1); let v3 = next(v2); let v4 = next(v3); let v5 = next(v4);
+                let pid = ((v3 >>> 16) << 16) | (v2 >>> 16);
                 let shiny = (tid ^ sid ^ (pid & 0xFFFF) ^ (pid >>> 16)) < 8;
                 if(shiny) {
-                    let ivA = v3>>>16; let ivB = v4>>>16;
+                    let ivA = v4>>>16; let ivB = v5>>>16;
                     let spread = `${ivA&31}/${ivA>>5&31}/${ivA>>10&31}/${(ivB>>5)&31}/${(ivB>>10)&31}/${ivB&31}`;
                     const row = body.insertRow();
                     row.className = "shiny-row";
@@ -627,6 +632,26 @@
                 }
                 s = v2;
             }
+        }
+
+        function verifySeedAdvance() {
+            const seedHex = (document.getElementById('verifySeed').value || '0').replace(/^0x/i, '');
+            const adv = parseInt(document.getElementById('verifyAdv').value, 10);
+            const seed = parseInt(seedHex, 16);
+            if(isNaN(seed) || seed < 0 || seed > 0xFFFF) {
+                document.getElementById('verifyOutput').innerHTML = '<span style="color:red;">Invalid seed (use hex e.g. BF6 or 0xBF6).</span>';
+                return;
+            }
+            let state = seed;
+            for(let i = 0; i < adv; i++) state = next(state);
+            let v1 = state, v2 = next(v1), v3 = next(v2), v4 = next(v3), v5 = next(v4);
+            let pid = ((v3 >>> 16) << 16) | (v2 >>> 16);
+            let rA = v4 >>> 16, rB = v5 >>> 16;
+            let ivs = [rA & 31, (rA >> 5) & 31, (rA >> 10) & 31, (rB >> 5) & 31, (rB >> 10) & 31, rB & 31];
+            const nature = NATURES[pid % 25];
+            document.getElementById('verifyOutput').innerHTML =
+                '<strong>Seed 0x' + seed.toString(16).toUpperCase() + '</strong>, advance <strong>' + adv + '</strong> (Method 1):<br>' +
+                'Nature: <strong>' + nature + '</strong><br>IVs: <strong>' + ivs.join(' / ') + '</strong> (HP/Atk/Def/SpA/SpD/Spe)';
         }
 
         function calculateSync() {
