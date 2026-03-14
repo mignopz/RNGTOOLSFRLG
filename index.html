@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FRLG Master v47 - The Hardened Monolith</title>
+    <title>FRLG Master RNG v49 - Full Restoration</title>
     <style>
-        /* STYLING SYSTEM - V47 HARDENED
-           Focus: Absolute containment and high-density data visibility.
-        */
+        /* FULL CSS SUITE - RESTORED & HARDENED */
         :root { 
             --primary: #1877f2; 
             --primary-hover: #166fe5;
@@ -29,11 +27,11 @@
         * { box-sizing: border-box; } 
 
         body { 
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             background-color: var(--bg); 
             color: var(--text); 
             margin: 0; 
-            padding: 10px;
+            padding: 20px;
             display: flex;
             justify-content: center;
             overflow-x: hidden;
@@ -48,169 +46,224 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            border: 1px solid var(--border);
         }
 
-        /* Header & Navigation */
+        /* Header Navigation */
         .app-header {
             background: var(--primary);
             color: white;
-            padding: 20px 30px;
+            padding: 25px 35px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 15px;
         }
 
-        .app-header h1 { margin: 0; font-size: 22px; font-weight: 800; }
+        .app-header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .header-meta {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            font-size: 12px;
+            opacity: 0.9;
+        }
 
         .tabs { 
             display: flex; 
-            background: #f0f2f5; 
-            padding: 10px 20px; 
-            gap: 10px; 
+            background: #f8f9fa; 
+            padding: 10px 25px; 
+            gap: 12px; 
             border-bottom: 1px solid var(--border);
             overflow-x: auto;
         }
 
         .tab-btn { 
-            padding: 12px 24px; 
+            padding: 14px 28px; 
             border: none; 
             background: transparent;
             cursor: pointer; 
             font-weight: 700; 
             border-radius: 8px; 
             color: var(--text-secondary);
-            transition: 0.2s;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 14px;
             white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            background: rgba(0,0,0,0.05);
         }
 
         .tab-btn.active { 
             background: white; 
             color: var(--primary); 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+            transform: translateY(-1px);
         }
 
-        .tab-content { display: none; padding: 25px; width: 100%; }
-        .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+        .tab-content { display: none; padding: 30px; }
+        .tab-content.active { display: block; animation: slideUp 0.4s ease-out; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { 
+            from { opacity: 0; transform: translateY(10px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
 
-        /* Form Layout */
+        /* Form Controls */
         .section { 
-            margin-bottom: 25px; 
+            margin-bottom: 35px; 
+            background: #ffffff;
             border: 1px solid var(--border);
-            padding: 20px;
-            border-radius: 10px;
+            padding: 25px;
+            border-radius: 12px;
+            position: relative;
         }
 
         .section-header {
-            font-size: 11px;
+            font-size: 12px;
             text-transform: uppercase;
             font-weight: 900;
             color: var(--text-secondary);
             border-bottom: 2px solid #f0f2f5;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
+            padding-bottom: 12px;
+            margin-bottom: 25px;
             display: flex;
             justify-content: space-between;
+            align-items: center;
         }
 
         .grid-inputs {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
             width: 100%;
         }
 
-        .input-wrapper { display: flex; flex-direction: column; gap: 8px; width: 100%; }
-        .input-wrapper label { font-size: 11px; font-weight: 700; color: var(--text-secondary); }
+        .input-wrapper { display: flex; flex-direction: column; gap: 8px; }
+        .input-wrapper label { font-size: 11px; font-weight: 800; color: var(--text-secondary); margin-left: 2px; }
 
         input, select {
-            padding: 12px;
+            padding: 14px;
             border: 2px solid var(--border);
-            border-radius: 8px;
-            font-size: 14px;
+            border-radius: 10px;
+            font-size: 15px;
             width: 100%;
-            background: #fff;
+            transition: 0.2s;
+            background-color: #fcfcfc;
         }
 
-        input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(24,119,242,0.15); }
+        input:focus { 
+            border-color: var(--primary); 
+            outline: none; 
+            background-color: #fff;
+            box-shadow: 0 0 0 4px rgba(24, 119, 242, 0.1);
+        }
 
         .btn {
-            padding: 15px 25px;
+            padding: 16px 28px;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-weight: 800;
             cursor: pointer;
             text-transform: uppercase;
-            font-size: 13px;
-            transition: 0.2s;
+            font-size: 14px;
+            width: 100%;
+            transition: all 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
         }
 
-        .btn-primary { background: var(--primary); color: white; width: 100%; }
-        .btn-danger { background: var(--accent); color: white; display: none; width: 100%; margin-top: 10px; }
-        .btn-success { background: var(--success); color: white; }
+        .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(24, 119, 242, 0.3); }
+        .btn-primary:hover { background: var(--primary-hover); transform: translateY(-2px); }
+        .btn-primary:disabled { background: #ccc; box-shadow: none; cursor: not-allowed; }
+        
+        .btn-danger { background: var(--accent); color: white; display: none; margin-top: 15px; }
+        .btn-success { background: var(--success); color: white; width: auto; padding: 8px 16px; font-size: 11px; }
 
         #status-bar {
             background: var(--dark-bg);
             color: #00ff41;
-            padding: 15px;
-            border-radius: 8px;
-            font-family: 'Consolas', monospace;
-            font-size: 13px;
-            margin: 20px 0;
-            border-left: 5px solid var(--success);
-            word-break: break-all;
+            padding: 18px;
+            border-radius: 10px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            margin: 25px 0;
+            border-left: 6px solid var(--success);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
         }
 
-        /* Table Styles */
+        /* Table & Visualization */
         .table-container {
             overflow-x: auto;
+            border-radius: 10px;
             border: 1px solid var(--border);
-            border-radius: 8px;
-            margin-top: 10px;
+            margin-top: 15px;
         }
 
-        table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 700px; }
-        th { background: #f8f9fa; padding: 15px; text-align: left; border-bottom: 2px solid var(--border); }
-        td { padding: 12px 15px; border-bottom: 1px solid #f0f2f5; font-family: 'Roboto Mono', monospace; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 800px; }
+        th { background: #f8f9fa; padding: 16px; text-align: left; border-bottom: 2px solid var(--border); font-weight: 800; color: var(--text-secondary); }
+        td { padding: 14px 16px; border-bottom: 1px solid #f0f2f5; font-family: 'Consolas', monospace; }
 
-        .shiny-row { background: #fffde7 !important; border-left: 5px solid var(--shiny); }
-        .badge { padding: 4px 8px; border-radius: 4px; color: white; font-weight: 900; font-size: 10px; }
+        .shiny-row { background: #fffde7 !important; border-left: 6px solid var(--shiny); font-weight: bold; }
+        
+        .badge {
+            padding: 4px 10px;
+            border-radius: 6px;
+            color: white;
+            font-size: 11px;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
         .m1 { background: var(--method-1); }
         .m2 { background: var(--method-2); }
         .m4 { background: var(--method-4); }
 
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #999; }
     </style>
 </head>
 <body>
     <div class="container">
         <header class="app-header">
-            <h1>FRLG Master RNG v47</h1>
-            <div id="session-tag" style="font-size: 12px; opacity: 0.8;">POKEFINDER METHOD-1 SYNC</div>
+            <div>
+                <h1>FRLG Master RNG v49</h1>
+                <div style="font-size: 12px; margin-top: 4px; opacity: 0.8;">Advanced Seed Exhaustion Suite</div>
+            </div>
+            <div class="header-meta">
+                <span>POKEFINDER SYNC: ON</span>
+                <span>ENGINE: JAVASCRIPT IMUL</span>
+            </div>
         </header>
 
         <nav class="tabs">
-            <button class="tab-btn active" onclick="openTab(event, 'marathon')">Global Marathon</button>
+            <button class="tab-btn active" onclick="openTab(event, 'marathon')">Seed Marathon</button>
             <button class="tab-btn" onclick="openTab(event, 'explorer')">Seed Explorer</button>
             <button class="tab-btn" onclick="openTab(event, 'sync')">Calibration</button>
         </nav>
 
         <div id="marathon" class="tab-content active">
             <div class="section">
-                <div class="section-header">1. Trainer & Target Profiles</div>
+                <div class="section-header">1. Trainer & Regional Profile</div>
                 <div class="grid-inputs">
                     <div class="input-wrapper">
-                        <label>TID</label>
+                        <label>Trainer ID (TID)</label>
                         <input type="number" id="tid" value="39454">
                     </div>
                     <div class="input-wrapper">
-                        <label>SID</label>
+                        <label>Secret ID (SID)</label>
                         <input type="number" id="sid" value="14448">
                     </div>
                     <div class="input-wrapper">
@@ -222,12 +275,12 @@
 
             <div class="section">
                 <div class="section-header">
-                    <span>2. Level 100 Stat Reference</span>
-                    <button class="btn-success" style="padding: 4px 12px; font-size: 10px;" onclick="calculateIVsFromStats()">Auto-Extract IVs</button>
+                    <span>2. Level 100 Stat Reference Decoder</span>
+                    <button class="btn-success" onclick="calculateIVsFromStats()">Auto-Extract IVs</button>
                 </div>
-                <div class="grid-inputs" style="margin-bottom: 15px;">
+                <div class="grid-inputs" style="margin-bottom: 20px;">
                     <div class="input-wrapper">
-                        <label>Species</label>
+                        <label>Species Selection</label>
                         <select id="speciesSelect"></select>
                     </div>
                     <div class="input-wrapper">
@@ -236,54 +289,50 @@
                     </div>
                 </div>
                 <div class="grid-inputs">
-                    <div class="input-wrapper"><label>HP (248)</label><input type="number" id="stat-0" value="248"></div>
-                    <div class="input-wrapper"><label>Atk (139)</label><input type="number" id="stat-1" value="139"></div>
-                    <div class="input-wrapper"><label>Def (137)</label><input type="number" id="stat-2" value="137"></div>
-                    <div class="input-wrapper"><label>SpA (110)</label><input type="number" id="stat-3" value="110"></div>
-                    <div class="input-wrapper"><label>SpD (143)</label><input type="number" id="stat-4" value="143"></div>
-                    <div class="input-wrapper"><label>Spe (117)</label><input type="number" id="stat-5" value="117"></div>
+                    <div class="input-wrapper"><label>HP Stat</label><input type="number" id="stat-0" value="248"></div>
+                    <div class="input-wrapper"><label>Attack</label><input type="number" id="stat-1" value="139"></div>
+                    <div class="input-wrapper"><label>Defense</label><input type="number" id="stat-2" value="137"></div>
+                    <div class="input-wrapper"><label>Sp. Atk</label><input type="number" id="stat-3" value="110"></div>
+                    <div class="input-wrapper"><label>Sp. Def</label><input type="number" id="stat-4" value="143"></div>
+                    <div class="input-wrapper"><label>Speed</label><input type="number" id="stat-5" value="117"></div>
                 </div>
             </div>
 
-            <div class="section" style="border-top: 4px solid var(--primary);">
-                <div class="section-header">3. RNG Global Search Parameters</div>
-                <div class="grid-inputs" style="margin-bottom: 15px;">
-                    <div class="input-wrapper"><label>HP IV</label><input type="number" id="iv-0" value="28"></div>
-                    <div class="input-wrapper"><label>Atk IV</label><input type="number" id="iv-1" value="24"></div>
-                    <div class="input-wrapper"><label>Def IV</label><input type="number" id="iv-2" value="20"></div>
-                    <div class="input-wrapper"><label>SpA IV</label><input type="number" id="iv-3" value="15"></div>
-                    <div class="input-wrapper"><label>SpD IV</label><input type="number" id="iv-4" value="8"></div>
-                    <div class="input-wrapper"><label>Spe IV</label><input type="number" id="iv-5" value="15"></div>
+            <div class="section" style="border-top: 5px solid var(--primary);">
+                <div class="section-header">3. RNG Marathon Search Parameters</div>
+                <div class="grid-inputs" style="margin-bottom: 20px;">
+                    <div class="input-wrapper"><label>HP IV</label><input type="number" id="iv-0"></div>
+                    <div class="input-wrapper"><label>Atk IV</label><input type="number" id="iv-1"></div>
+                    <div class="input-wrapper"><label>Def IV</label><input type="number" id="iv-2"></div>
+                    <div class="input-wrapper"><label>SpA IV</label><input type="number" id="iv-3"></div>
+                    <div class="input-wrapper"><label>SpD IV</label><input type="number" id="iv-4"></div>
+                    <div class="input-wrapper"><label>Spe IV</label><input type="number" id="iv-5"></div>
                 </div>
                 <div class="grid-inputs">
-                    <div class="input-wrapper"><label>Min Advance</label><input type="number" id="minAdv" value="1000"></div>
-                    <div class="input-wrapper"><label>Max Advance</label><input type="number" id="maxAdv" value="15000"></div>
+                    <div class="input-wrapper"><label>Minimum Advance</label><input type="number" id="minAdv" value="1000"></div>
+                    <div class="input-wrapper"><label>Maximum Advance</label><input type="number" id="maxAdv" value="20000"></div>
                 </div>
-                <div style="margin-top: 15px; font-size: 13px; display: flex; align-items: center; gap: 8px;">
-                    <input type="checkbox" id="fuzzySearch" style="width: 18px; height: 18px;"> 
-                    <label for="fuzzySearch" style="font-weight: 700;">Enable Fuzzy Logic (Matches within ±1 IV)</label>
-                </div>
-                <button class="btn btn-primary" id="startBtn" onclick="runMarathon()" style="margin-top: 20px;">Execute Seed Exhaustion Scan</button>
-                <button class="btn btn-danger" id="stopBtn" onclick="stopSearch()">Force Abort</button>
+                <button class="btn btn-primary" id="startBtn" onclick="runMarathon()" style="margin-top: 25px;">Execute Global Scan</button>
+                <button class="btn btn-danger" id="stopBtn" onclick="stopSearch()">Abort Search</button>
             </div>
 
-            <div id="status-bar">System Status: Ready. Awaiting global search parameters.</div>
+            <div id="status-bar">System Ready. Awaiting instructions.</div>
 
             <div class="section">
-                <div class="section-header">Seed Consistency Table</div>
+                <div class="section-header">Initial Seed Consistency Log</div>
                 <div class="table-container">
-                    <table>
-                        <thead><tr><th>Initial Seed</th><th>Hit Count</th><th>Avg Advance</th><th>Link</th></tr></thead>
+                    <table id="consistencyTable">
+                        <thead><tr><th>Initial Seed</th><th>Matches Found</th><th>Average Advance</th><th>Link</th></tr></thead>
                         <tbody id="consistencyBody"></tbody>
                     </table>
                 </div>
             </div>
 
             <div class="section">
-                <div class="section-header">Full Discovery Log</div>
+                <div class="section-header">Real-time Discovery Log</div>
                 <div class="table-container">
-                    <table>
-                        <thead><tr><th>Seed</th><th>Advance</th><th>Method</th><th>IVs</th><th>Shiny</th></tr></thead>
+                    <table id="resultsTable">
+                        <thead><tr><th>Seed</th><th>Advance</th><th>Method</th><th>IV Spread</th><th>Shiny</th></tr></thead>
                         <tbody id="marathonResults"></tbody>
                     </table>
                 </div>
@@ -292,16 +341,16 @@
 
         <div id="explorer" class="tab-content">
             <div class="section">
-                <div class="section-header">Seed Mapping Tool</div>
+                <div class="section-header">Seed Mapping & Visualization</div>
                 <div class="grid-inputs">
                     <div class="input-wrapper"><label>Seed (Hex)</label><input type="text" id="targetHex" placeholder="0x0000"></div>
-                    <div class="input-wrapper"><label>Depth</label><input type="number" id="depth" value="50000"></div>
+                    <div class="input-wrapper"><label>Scan Depth</label><input type="number" id="depth" value="50000"></div>
                 </div>
-                <button class="btn btn-primary" onclick="exploreSeed()" style="margin-top: 20px;">Generate Map</button>
+                <button class="btn btn-primary" onclick="exploreSeed()" style="margin-top: 20px;">Map Advancements</button>
             </div>
             <div class="table-container">
                 <table>
-                    <thead><tr><th>Adv</th><th>Nature</th><th>IV Spread</th><th>Shiny</th></tr></thead>
+                    <thead><tr><th>Advance</th><th>Nature</th><th>IV Spread</th><th>Shiny</th></tr></thead>
                     <tbody id="explorerBody"></tbody>
                 </table>
             </div>
@@ -309,41 +358,115 @@
 
         <div id="sync" class="tab-content">
             <div class="section">
-                <div class="section-header">Latency Calibration</div>
+                <div class="section-header">Latency & Offset Calibration</div>
                 <div class="grid-inputs">
                     <div class="input-wrapper"><label>Target Frame</label><input type="number" id="targetF" value="2000"></div>
-                    <div class="input-wrapper"><label>Hit Frame</label><input type="number" id="actualF"></div>
+                    <div class="input-wrapper"><label>Actual Hit</label><input type="number" id="actualF"></div>
                 </div>
-                <div id="syncOutput" style="font-size: 48px; text-align: center; padding: 50px; font-weight: 900; color: var(--primary);">0ms</div>
-                <button class="btn btn-primary" onclick="calculateSync()">Analyze Offset</button>
+                <div id="syncOutput" style="font-size: 64px; text-align: center; padding: 60px; font-weight: 900; color: var(--primary);">0ms</div>
+                <button class="btn btn-primary" onclick="calculateSync()">Sync Calibration</button>
             </div>
         </div>
     </div>
 
     <script>
-        /* CORE ENGINE - VERSION 47
-           Restoring full functionality with logic fixes for Eevee/Relaxed/Method 1.
-        */
+        /* CORE ENGINE - FRLG MASTER v49 */
         const NATURES = ["Hardy", "Lonely", "Brave", "Adamant", "Naughty", "Bold", "Docile", "Relaxed", "Impish", "Lax", "Timid", "Hasty", "Serious", "Jolly", "Naive", "Modest", "Mild", "Quiet", "Bashful", "Rash", "Calm", "Gentle", "Sassy", "Careful", "Quirky"];
         
+        /* FULL DATABASE RESTORED */
         const SPECIES_DB = {
+            "Bulbasaur": [45, 49, 49, 65, 65, 45],
+            "Charmander": [39, 52, 43, 60, 50, 65],
+            "Squirtle": [44, 48, 65, 50, 64, 43],
+            "Caterpie": [45, 30, 35, 20, 20, 45],
+            "Weedle": [40, 35, 30, 20, 20, 50],
+            "Pidgey": [40, 45, 40, 35, 35, 56],
+            "Rattata": [30, 56, 35, 25, 35, 72],
+            "Spearow": [40, 60, 30, 31, 31, 70],
+            "Ekans": [35, 60, 44, 40, 54, 55],
+            "Pikachu": [35, 55, 30, 50, 40, 90],
+            "Sandshrew": [50, 75, 85, 20, 30, 40],
+            "Clefairy": [70, 45, 48, 60, 65, 35],
+            "Vulpix": [38, 41, 40, 50, 65, 65],
+            "Jigglypuff": [115, 45, 20, 45, 25, 20],
+            "Zubat": [40, 45, 35, 30, 40, 55],
+            "Oddish": [45, 50, 55, 75, 65, 30],
+            "Paras": [35, 70, 55, 45, 55, 25],
+            "Venonat": [60, 55, 50, 40, 55, 45],
+            "Diglett": [10, 55, 25, 35, 45, 95],
+            "Meowth": [40, 45, 35, 40, 40, 90],
+            "Psyduck": [50, 52, 48, 65, 50, 55],
+            "Mankey": [40, 80, 35, 35, 45, 70],
+            "Growlithe": [55, 70, 45, 70, 50, 60],
+            "Poliwag": [40, 50, 40, 40, 40, 90],
+            "Abra": [25, 20, 15, 105, 55, 90],
+            "Machop": [70, 80, 50, 35, 35, 35],
+            "Bellsprout": [50, 75, 35, 70, 30, 40],
+            "Tentacool": [40, 40, 35, 50, 100, 70],
+            "Geodude": [40, 80, 100, 30, 30, 20],
+            "Ponyta": [50, 85, 55, 65, 65, 90],
+            "Slowpoke": [90, 65, 65, 40, 40, 15],
+            "Magnemite": [25, 35, 70, 95, 55, 45],
+            "Farfetch'd": [52, 65, 55, 58, 62, 60],
+            "Doduo": [35, 85, 45, 35, 35, 75],
+            "Seel": [65, 45, 55, 45, 70, 45],
+            "Grimer": [80, 80, 50, 40, 50, 25],
+            "Shellder": [30, 65, 100, 45, 25, 40],
+            "Gastly": [30, 35, 30, 100, 35, 80],
+            "Onix": [35, 45, 160, 30, 45, 70],
+            "Drowzee": [60, 48, 45, 43, 90, 42],
+            "Krabby": [30, 105, 90, 25, 25, 50],
+            "Voltorb": [40, 30, 50, 55, 55, 100],
+            "Exeggcute": [60, 40, 80, 60, 45, 40],
+            "Cubone": [50, 50, 95, 40, 50, 35],
+            "Hitmonlee": [50, 120, 53, 35, 110, 87],
+            "Hitmonchan": [50, 105, 79, 35, 110, 76],
+            "Lickitung": [90, 55, 75, 60, 75, 30],
+            "Koffing": [40, 65, 95, 60, 45, 35],
+            "Rhyhorn": [80, 85, 95, 30, 30, 25],
+            "Chansey": [250, 5, 5, 35, 105, 50],
+            "Tangela": [65, 55, 115, 100, 40, 60],
+            "Kangaskhan": [105, 95, 80, 40, 80, 90],
+            "Horsea": [30, 40, 70, 70, 25, 60],
+            "Goldeen": [45, 67, 60, 35, 50, 63],
+            "Staryu": [30, 45, 55, 70, 55, 85],
+            "Mr. Mime": [40, 45, 65, 100, 120, 90],
+            "Scyther": [70, 110, 80, 55, 80, 105],
+            "Jynx": [65, 50, 35, 115, 95, 95],
+            "Electabuzz": [65, 83, 57, 95, 85, 105],
+            "Magmar": [65, 95, 57, 100, 85, 93],
+            "Pinsir": [65, 125, 100, 55, 70, 85],
+            "Tauros": [75, 100, 95, 40, 70, 110],
+            "Magikarp": [20, 10, 55, 15, 20, 80],
+            "Lapras": [130, 85, 80, 85, 95, 60],
+            "Ditto": [48, 48, 48, 48, 48, 48],
             "Eevee": [55, 55, 50, 45, 65, 55],
-            "Mewtwo": [106, 110, 90, 154, 90, 130],
-            "Zapdos": [90, 90, 85, 125, 90, 100],
+            "Porygon": [65, 60, 70, 85, 75, 40],
+            "Omanyte": [35, 40, 100, 90, 55, 35],
+            "Kabuto": [30, 80, 90, 55, 45, 55],
+            "Aerodactyl": [80, 105, 65, 60, 75, 130],
+            "Snorlax": [160, 110, 65, 65, 110, 30],
             "Articuno": [90, 85, 100, 95, 125, 85],
+            "Zapdos": [90, 90, 85, 125, 90, 100],
             "Moltres": [90, 100, 90, 125, 85, 90],
-            "Snorlax": [160, 110, 65, 65, 110, 30]
+            "Dratini": [41, 64, 45, 50, 50, 50],
+            "Mewtwo": [106, 110, 90, 154, 90, 130]
         };
 
         let isSearching = false;
-        let consistency = {};
+        let consistencyTracker = {};
 
         window.onload = () => {
             const speciesSel = document.getElementById('speciesSelect');
             const targetNat = document.getElementById('targetNature');
             const actualNat = document.getElementById('actualNature');
 
-            Object.keys(SPECIES_DB).sort().forEach(s => speciesSel.options.add(new Option(s, s)));
+            // Build Species Dropdown
+            Object.keys(SPECIES_DB).sort().forEach(s => {
+                speciesSel.options.add(new Option(s, s));
+            });
+
+            // Build Natures Dropdown
             NATURES.forEach(n => {
                 targetNat.options.add(new Option(n, n));
                 actualNat.options.add(new Option(n, n));
@@ -360,7 +483,7 @@
             evt.currentTarget.classList.add('active');
         }
 
-        /* IV DECODER LOGIC */
+        /* IV CALCULATOR */
         function calculateIVsFromStats() {
             const species = document.getElementById('speciesSelect').value;
             const natureIdx = NATURES.indexOf(document.getElementById('actualNature').value);
@@ -379,7 +502,6 @@
                         if(pair[0] === i) m = 1.1;
                         if(pair[1] === i) m = 0.9;
                     }
-                    // FRLG Level 100 Formula
                     let c = (i === 0) ? Math.floor((2 * base[i] + iv) + 110) : Math.floor((Math.floor(2 * base[i] + iv + 5)) * m);
                     if(c === stats[i]) {
                         document.getElementById('iv-'+i).value = iv;
@@ -387,7 +509,7 @@
                     }
                 }
             }
-            log("IV extraction synchronized to Section 3.");
+            log("IV extraction synchronized to marathon parameters.");
         }
 
         /* RNG KERNEL */
@@ -404,15 +526,17 @@
             const targetIVs = [0,1,2,3,4,5].map(i => parseInt(document.getElementById('iv-'+i).value));
             const minA = parseInt(document.getElementById('minAdv').value);
             const maxA = parseInt(document.getElementById('maxAdv').value);
-            const fuzzy = document.getElementById('fuzzySearch').checked;
 
             let seed = 0;
 
-            function process() {
-                const startTime = Date.now();
-                while(Date.now() - startTime < 120) {
+            function scan() {
+                const start = Date.now();
+                while(Date.now() - start < 120) {
                     if(!isSearching || seed > 0xFFFF) {
-                        finalize();
+                        isSearching = false;
+                        document.getElementById('startBtn').disabled = false;
+                        document.getElementById('stopBtn').style.display = 'none';
+                        log("Scan complete.");
                         return;
                     }
 
@@ -426,124 +550,89 @@
                         let v4 = next(v3);
                         let v5 = next(v4);
 
-                        // Pokefinder PID Alignment
                         let pid = ((v2 >>> 16) << 16) | (v1 >>> 16);
                         
                         if((pid >>> 0) % 25 === targetNat) {
-                            validate(seed, f, 1, v3 >>> 16, v4 >>> 16, targetIVs, tid, sid, pid, fuzzy);
-                            validate(seed, f, 2, v3 >>> 16, v5 >>> 16, targetIVs, tid, sid, pid, fuzzy);
-                            validate(seed, f, 4, v4 >>> 16, v5 >>> 16, targetIVs, tid, sid, pid, fuzzy);
+                            check(seed, f, 1, v3 >>> 16, v4 >>> 16, targetIVs, tid, sid, pid);
+                            check(seed, f, 2, v3 >>> 16, v5 >>> 16, targetIVs, tid, sid, pid);
+                            check(seed, f, 4, v4 >>> 16, v5 >>> 16, targetIVs, tid, sid, pid);
                         }
                         state = v2;
                     }
                     seed++;
-                    if(seed % 1000 === 0) log(`Global Progress: ${(seed/655.35).toFixed(1)}%`);
+                    if(seed % 500 === 0) log(`Global Progress: ${(seed/655.35).toFixed(1)}%`);
                 }
-                setTimeout(process, 0);
+                setTimeout(scan, 0);
             }
-            process();
+            scan();
         }
 
-        function validate(seed, adv, meth, valA, valB, target, tid, sid, pid, fuzzy) {
-            let ivs = [valA & 31, (valA >> 5) & 31, (valA >> 10) & 31, valB & 31, (valB >> 5) & 31, (valB >> 10) & 31];
+        function check(seed, f, m, rA, rB, target, tid, sid, pid) {
+            let ivs = [rA & 31, (rA >> 5) & 31, (rA >> 10) & 31, rB & 31, (rB >> 5) & 31, (rB >> 10) & 31];
             
-            let isMatch = ivs.every((v, i) => {
-                if(isNaN(target[i])) return true;
-                return fuzzy ? Math.abs(v - target[i]) <= 1 : v === target[i];
-            });
+            let match = ivs.every((v, i) => isNaN(target[i]) || v === target[i]);
 
-            if(isMatch) {
+            if(match) {
                 let shiny = (tid ^ sid ^ (pid & 0xFFFF) ^ (pid >>> 16)) < 8;
-                recordDiscovery(seed, adv, meth, ivs, shiny);
+                addResult(seed, f, m, ivs, shiny);
             }
         }
 
-        function recordDiscovery(seed, adv, meth, ivs, shiny) {
+        function addResult(seed, adv, m, ivs, shiny) {
             const hex = "0x" + seed.toString(16).toUpperCase().padStart(4, '0');
-            const tableBody = document.getElementById('marathonResults');
-            const row = tableBody.insertRow(0);
+            const row = document.getElementById('marathonResults').insertRow(0);
             if(shiny) row.className = "shiny-row";
-            row.innerHTML = `
-                <td>${hex}</td>
-                <td>${adv}</td>
-                <td><span class="badge m${meth}">M${meth}</span></td>
-                <td>${ivs.join('/')}</td>
-                <td>${shiny?'YES ✨':'No'}</td>
-            `;
+            row.innerHTML = `<td>${hex}</td><td>${adv}</td><td><span class="badge m${m}">M${m}</span></td><td>${ivs.join('/')}</td><td>${shiny?'YES ✨':'No'}</td>`;
 
-            if(!consistency[hex]) consistency[hex] = { count: 0, sum: 0 };
-            consistency[hex].count++;
-            consistency[hex].sum += adv;
+            if(!consistencyTracker[hex]) consistencyTracker[hex] = { h: 0, s: 0 };
+            consistencyTracker[hex].h++;
+            consistencyTracker[hex].s += adv;
             updateConsistencyTable();
         }
 
         function updateConsistencyTable() {
-            const tbody = document.getElementById('consistencyBody');
-            tbody.innerHTML = "";
-            Object.keys(consistency).sort((a,b) => consistency[b].count - consistency[a].count).forEach(s => {
-                const row = tbody.insertRow();
-                row.innerHTML = `
-                    <td>${s}</td>
-                    <td>${consistency[s].count} Matches</td>
-                    <td>${Math.round(consistency[s].sum / consistency[s].count)}</td>
-                    <td><button onclick="jumpToExplorer('${s}')" class="btn-success" style="padding:4px 8px; font-size:10px;">MAP</button></td>
-                `;
+            const b = document.getElementById('consistencyBody');
+            b.innerHTML = "";
+            Object.keys(consistencyTracker).sort((x,y) => consistencyTracker[y].h - consistencyTracker[x].h).forEach(s => {
+                const r = b.insertRow();
+                r.innerHTML = `<td>${s}</td><td>${consistencyTracker[s].h} Hits</td><td>${Math.round(consistencyTracker[s].s/consistencyTracker[s].h)}</td><td><button onclick="syncExplorer('${s}')" class="btn-success">MAP</button></td>`;
             });
         }
 
-        function log(msg) { document.getElementById('status-bar').innerText = msg; }
-        
-        function finalize() {
-            isSearching = false;
-            document.getElementById('startBtn').disabled = false;
-            document.getElementById('stopBtn').style.display = 'none';
-            log("Scan finalized.");
-        }
-
-        function stopSearch() { isSearching = false; }
-
-        function jumpToExplorer(hex) {
-            document.getElementById('targetHex').value = hex;
-            openTab({currentTarget: document.querySelectorAll('.tab-btn')[1]}, 'explorer');
-        }
-
         function exploreSeed() {
-            const sVal = document.getElementById('targetHex').value;
-            const seed = parseInt(sVal, 16);
-            const depth = parseInt(document.getElementById('depth').value);
+            const seed = parseInt(document.getElementById('targetHex').value, 16);
+            const d = parseInt(document.getElementById('depth').value);
             const tid = parseInt(document.getElementById('tid').value);
             const sid = parseInt(document.getElementById('sid').value);
             const body = document.getElementById('explorerBody');
             
             body.innerHTML = "";
-            let state = seed;
-            for(let i=0; i<=depth; i++) {
-                let v1 = state;
-                let v2 = next(v1);
-                let v3 = next(v2);
-                let v4 = next(v3);
+            let s = seed;
+            for(let i=0; i<=d; i++) {
+                let v1 = s; let v2 = next(v1); let v3 = next(v2); let v4 = next(v3);
                 let pid = ((v2 >>> 16) << 16) | (v1 >>> 16);
                 let shiny = (tid ^ sid ^ (pid & 0xFFFF) ^ (pid >>> 16)) < 8;
                 if(shiny) {
-                    let ivA = v3 >>> 16; let ivB = v4 >>> 16;
+                    let ivA = v3>>>16; let ivB = v4>>>16;
                     let spread = `${ivA&31}/${ivA>>5&31}/${ivA>>10&31}/${ivB&31}/${ivB>>5&31}/${ivB>>10&31}`;
                     const row = body.insertRow();
                     row.className = "shiny-row";
                     row.innerHTML = `<td>${i}</td><td>${NATURES[pid%25]}</td><td>${spread}</td><td>✨</td>`;
                 }
-                state = v2;
+                s = v2;
             }
         }
 
         function calculateSync() {
             const t = parseInt(document.getElementById('targetF').value);
             const a = parseInt(document.getElementById('actualF').value);
-            const diff = a - t;
-            const ms = Math.round((diff / 60) * 1000);
             const out = document.getElementById('syncOutput');
-            out.innerText = `${ms}ms`;
-            out.style.color = Math.abs(diff) < 3 ? "var(--success)" : "var(--accent)";
+            out.innerText = `${Math.round(((a - t)/60)*1000)}ms`;
         }
+
+        function log(m) { document.getElementById('status-bar').innerText = m; }
+        function stopSearch() { isSearching = false; }
+        function syncExplorer(h) { document.getElementById('targetHex').value = h; openTab({currentTarget: document.querySelectorAll('.tab-btn')[1]}, 'explorer'); }
     </script>
 </body>
 </html>
