@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>FRLG Master RNG v49 - Full Restoration</title>
     <style>
         /* FULL CSS SUITE - RESTORED & HARDENED */
@@ -96,6 +96,7 @@
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             font-size: 14px;
             white-space: nowrap;
+            touch-action: manipulation;
         }
 
         .tab-btn:hover {
@@ -181,6 +182,7 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
+            touch-action: manipulation;
         }
 
         .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(24, 119, 242, 0.3); }
@@ -233,6 +235,92 @@
         ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #999; }
+
+        /* Mobile-friendly */
+        @media (max-width: 768px) {
+            body { padding: 10px 12px; min-height: 100vh; -webkit-text-size-adjust: 100%; }
+            .container { border-radius: 8px; max-width: 100%; }
+            .app-header {
+                padding: 16px 18px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            .app-header h1 { font-size: 18px; }
+            .app-header .header-meta { align-items: flex-start; font-size: 11px; }
+            .tabs {
+                padding: 8px 12px;
+                gap: 6px;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+            .tabs::-webkit-scrollbar { display: none; }
+            .tab-btn {
+                padding: 12px 18px;
+                font-size: 13px;
+                min-height: 44px;
+                flex-shrink: 0;
+            }
+            .tab-btn.active { transform: none; }
+            .tab-content { padding: 16px 14px; }
+            .section {
+                padding: 16px 14px;
+                margin-bottom: 20px;
+            }
+            .section-header {
+                font-size: 11px;
+                padding-bottom: 10px;
+                margin-bottom: 16px;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .section-header .btn-success { min-height: 40px; padding: 10px 14px; }
+            .grid-inputs {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+            .input-wrapper label { font-size: 10px; }
+            input, select {
+                padding: 12px 10px;
+                font-size: 16px;
+                min-height: 44px;
+            }
+            .btn {
+                padding: 14px 20px;
+                font-size: 13px;
+                min-height: 48px;
+            }
+            .btn-success { min-height: 44px; padding: 10px 16px; font-size: 12px; width: 100%; }
+            #status-bar {
+                padding: 12px 14px;
+                font-size: 12px;
+                margin: 16px 0;
+            }
+            .table-container {
+                margin-left: -14px;
+                margin-right: -14px;
+                border-radius: 0;
+                border-left: none;
+                border-right: none;
+                -webkit-overflow-scrolling: touch;
+            }
+            table {
+                font-size: 12px;
+                min-width: 520px;
+            }
+            th, td { padding: 10px 8px; }
+            .badge { padding: 3px 6px; font-size: 10px; }
+            #verifyOutput { font-size: 13px; padding: 10px; }
+        }
+
+        @media (max-width: 480px) {
+            body { padding: 8px; }
+            .grid-inputs { grid-template-columns: 1fr; }
+            .app-header h1 { font-size: 16px; }
+            .tab-content { padding: 12px 10px; }
+            .section { padding: 14px 10px; }
+            .table-container { margin-left: -10px; margin-right: -10px; }
+        }
     </style>
 </head>
 <body>
@@ -320,6 +408,7 @@
 
             <div class="section">
                 <div class="section-header">Initial Seed Consistency Log</div>
+                <button class="btn-success" onclick="clearResults()" style="margin-bottom: 12px;">Clear all results</button>
                 <div class="table-container">
                     <table id="consistencyTable">
                         <thead><tr><th>Initial Seed</th><th>Matches Found</th><th>Average Advance</th><th>Link</th></tr></thead>
@@ -463,27 +552,79 @@
             "Mewtwo": [106, 110, 90, 154, 90, 130]
         };
 
+        const STORAGE_KEY = 'frlg_marathon_data';
         let isSearching = false;
         let consistencyTracker = {};
+
+        function saveResults() {
+            const rows = [];
+            document.querySelectorAll('#marathonResults tr').forEach(tr => {
+                const cells = tr.querySelectorAll('td');
+                if(cells.length >= 5) {
+                    rows.push({
+                        seed: cells[0].innerText,
+                        adv: cells[1].innerText,
+                        m: (cells[2].querySelector('.badge') || {}).innerText || cells[2].innerText,
+                        ivs: cells[3].innerText,
+                        shiny: cells[4].innerText.indexOf('YES') >= 0
+                    });
+                }
+            });
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify({ results: rows, consistency: consistencyTracker }));
+            } catch(e) {}
+        }
+
+        function loadResults() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if(!raw) return;
+                const data = JSON.parse(raw);
+                if(!data.results || !data.results.length) {
+                    if(data.consistency && Object.keys(data.consistency).length) {
+                        consistencyTracker = data.consistency;
+                        updateConsistencyTable();
+                    }
+                    return;
+                }
+                consistencyTracker = data.consistency || {};
+                const tbody = document.getElementById('marathonResults');
+                tbody.innerHTML = '';
+                data.results.forEach(obj => {
+                    const row = tbody.insertRow(0);
+                    if(obj.shiny) row.className = 'shiny-row';
+                    const mLabel = (obj.m || 'M1').toString();
+                    const mNum = mLabel.replace(/\D/g, '') || '1';
+                    row.innerHTML = `<td>${obj.seed}</td><td>${obj.adv}</td><td><span class="badge m${mNum}">${mLabel}</span></td><td>${obj.ivs}</td><td>${obj.shiny ? 'YES ✨' : 'No'}</td>`;
+                });
+                updateConsistencyTable();
+            } catch(e) {}
+        }
+
+        function clearResults() {
+            consistencyTracker = {};
+            document.getElementById('consistencyBody').innerHTML = '';
+            document.getElementById('marathonResults').innerHTML = '';
+            try { localStorage.setItem(STORAGE_KEY, '{"results":[],"consistency":{}}'); } catch(e) {}
+            log('Results cleared.');
+        }
 
         window.onload = () => {
             const speciesSel = document.getElementById('speciesSelect');
             const targetNat = document.getElementById('targetNature');
             const actualNat = document.getElementById('actualNature');
 
-            // Build Species Dropdown
             Object.keys(SPECIES_DB).sort().forEach(s => {
                 speciesSel.options.add(new Option(s, s));
             });
-
-            // Build Natures Dropdown
             NATURES.forEach(n => {
                 targetNat.options.add(new Option(n, n));
                 actualNat.options.add(new Option(n, n));
             });
-            
             targetNat.value = "Relaxed";
             actualNat.value = "Relaxed";
+
+            loadResults();
         };
 
         function openTab(evt, name) {
@@ -599,6 +740,7 @@
             consistencyTracker[hex].h++;
             consistencyTracker[hex].s += adv;
             updateConsistencyTable();
+            saveResults();
         }
 
         function updateConsistencyTable() {
