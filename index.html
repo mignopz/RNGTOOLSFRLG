@@ -421,7 +421,7 @@
                 <div class="section-header">Real-time Discovery Log</div>
                 <div class="table-container">
                     <table id="resultsTable">
-                        <thead><tr><th>Seed</th><th>Advance</th><th>Method</th><th>IV Spread</th><th>Shiny</th></tr></thead>
+                        <thead><tr><th>Seed</th><th>Advance</th><th>Method</th><th>IV Spread</th><th>Shiny</th><th>Nature</th><th>Time</th></tr></thead>
                         <tbody id="marathonResults"></tbody>
                     </table>
                 </div>
@@ -556,6 +556,7 @@
         let isSearching = false;
         let consistencyTracker = {};
 
+        const MAX_STORED_ROWS = 800;
         function saveResults() {
             const rows = [];
             document.querySelectorAll('#marathonResults tr').forEach(tr => {
@@ -566,13 +567,26 @@
                         adv: cells[1].innerText,
                         m: (cells[2].querySelector('.badge') || {}).innerText || cells[2].innerText,
                         ivs: cells[3].innerText,
-                        shiny: cells[4].innerText.indexOf('YES') >= 0
+                        shiny: cells[4].innerText.indexOf('YES') >= 0,
+                        nature: cells[5] ? cells[5].innerText : '',
+                        time: cells[6] ? cells[6].innerText : ''
                     });
                 }
             });
+            const toStore = rows.length > MAX_STORED_ROWS ? rows.slice(0, MAX_STORED_ROWS) : rows;
+            const consistencyFromRows = {};
+            toStore.forEach(function(r) {
+                if(!consistencyFromRows[r.seed]) consistencyFromRows[r.seed] = { h: 0, s: 0 };
+                consistencyFromRows[r.seed].h++;
+                consistencyFromRows[r.seed].s += parseInt(r.adv, 10) || 0;
+            });
             try {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify({ results: rows, consistency: consistencyTracker }));
-            } catch(e) {}
+                localStorage.setItem(STORAGE_KEY, JSON.stringify({ results: toStore, consistency: consistencyFromRows }));
+            } catch(e) {
+                try {
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify({ results: toStore.slice(0, 300), consistency: {} }));
+                } catch(e2) {}
+            }
         }
 
         function loadResults() {
@@ -595,7 +609,9 @@
                     if(obj.shiny) row.className = 'shiny-row';
                     const mLabel = (obj.m || 'M1').toString();
                     const mNum = mLabel.replace(/\D/g, '') || '1';
-                    row.innerHTML = `<td>${obj.seed}</td><td>${obj.adv}</td><td><span class="badge m${mNum}">${mLabel}</span></td><td>${obj.ivs}</td><td>${obj.shiny ? 'YES ✨' : 'No'}</td>`;
+                    const nature = obj.nature != null ? obj.nature : '—';
+                    const time = obj.time != null ? obj.time : '';
+                    row.innerHTML = `<td>${obj.seed}</td><td>${obj.adv}</td><td><span class="badge m${mNum}">${mLabel}</span></td><td>${obj.ivs}</td><td>${obj.shiny ? 'YES ✨' : 'No'}</td><td>${nature}</td><td>${time}</td>`;
                 });
                 updateConsistencyTable();
             } catch(e) {}
@@ -726,15 +742,17 @@
 
             if(match) {
                 let shiny = (tid ^ sid ^ (pid & 0xFFFF) ^ (pid >>> 16)) < 8;
-                addResult(seed, f, m, ivs, shiny);
+                let nature = NATURES[(pid >>> 0) % 25];
+                addResult(seed, f, m, ivs, shiny, nature);
             }
         }
 
-        function addResult(seed, adv, m, ivs, shiny) {
+        function addResult(seed, adv, m, ivs, shiny, nature) {
             const hex = "0x" + seed.toString(16).toUpperCase().padStart(4, '0');
+            const time = new Date().toLocaleString();
             const row = document.getElementById('marathonResults').insertRow(0);
             if(shiny) row.className = "shiny-row";
-            row.innerHTML = `<td>${hex}</td><td>${adv}</td><td><span class="badge m${m}">M${m}</span></td><td>${ivs.join('/')}</td><td>${shiny?'YES ✨':'No'}</td>`;
+            row.innerHTML = `<td>${hex}</td><td>${adv}</td><td><span class="badge m${m}">M${m}</span></td><td>${ivs.join('/')}</td><td>${shiny?'YES ✨':'No'}</td><td>${nature || '—'}</td><td>${time}</td>`;
 
             if(!consistencyTracker[hex]) consistencyTracker[hex] = { h: 0, s: 0 };
             consistencyTracker[hex].h++;
